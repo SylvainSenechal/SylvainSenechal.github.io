@@ -4,23 +4,34 @@
         <title>Mon projet canvas</title>
     </head>
     <body>
-        <a href="projects/game of life/gol.html"> The Game of Life </a>
-        <a href="projects/open world/opnworld.html"> 3D Open World </a>
 
+
+        <div class="btn-group btn-group-sm">
+          <a href="projects/game of life/gol.html" class="btn btn-info" role="button">The Game of Life</a>
+          <a href="projects/open world/opnworld.html" class="btn btn-info" role="button">3D Open World</a>
+        </div>
+
+        <div class="bonjo">
+          <div id="ho"> bonbon </div> 
+         
+        </div>
+
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     </body>
 </html>
 <style>
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0px;
-      border: 0px;
-      overflow: hidden; /*  Disable scrollbars */
-      display: block;  /* No floating content on sides */
-    }
+    .bonjo #ho { display: none }
 
 </style>
 
 <script>
+document.body.classList.add('accueil')
+document.onclick = function(e){
+  document.body.classList.add('ahh')
 
+}
 </script>

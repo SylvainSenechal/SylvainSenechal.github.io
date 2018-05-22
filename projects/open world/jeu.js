@@ -26,7 +26,7 @@ function init(){
 	createSea();
 	createGround();
 	createSun();
-	loadTree1();
+	//loadTree1();
 	initGUI();
 	loop();
 }
@@ -56,18 +56,18 @@ function initGUI(){
 function loop(){ 
 		requestAnimationFrame(loop);
 	stats.begin();
-	animateTree();
+	//animateTree();
 	sea.moveWaves();
 	//render();
 	//rayMouse();
-	if(abc==1){
+	/*if(abc==1){
 		cylinder.position.z -= 4
 		cylinder.rotateY(0.01)
 		//cylinder.lookAt(0,0,0)
-	}
+	}*/
 	vitesse();
-	//moveSun();
-	mousePicker();
+	moveSun();
+	//mousePicker();
 	//sea.mesh.geometry.dispose();
 	
 	renderer.render(scene, camera);
@@ -417,7 +417,7 @@ Sea = function(){
 }
 
 
-var abc=0;
+/*var abc=0;
 var cylinder;
 document.onclick = function cl(e){
 	createTree1();
@@ -446,7 +446,7 @@ document.onclick = function cl(e){
    //                           elem.mozRequestPointerLock
    // elem.requestPointerLock();
 
-}
+}*/
 
 var verts, lg;
 Sea.prototype.moveWaves = function (){
