@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mon projet canvas</title>
+    </head>
+    <body>
+        <canvas id="mon_canvas">
+            Message pour les navigateurs ne supportant pas encore canvas.
+        </canvas>
+        <button type="button" id="restart" onclick="breedNewGeneration()"> Force new geneneration breeding</button>
+        <button type="button" id="start" onclick="initCars()"> Start new population </button>
+        <button type="button" id="typeMapGround" onclick="typeDrawGround()"> Draw ground </button>
+        <button type="button" id="typeMapStart" onclick="typeDrawStart()"> Position starting point </button>
+    </body>
+</html>
+<style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      border: 0px;
+      overflow: hidden; /*  Disable scrollbars */
+      display: block;  /* No floating content on sides */
+    }
+    #restart {
+      position: absolute;
+      top: 5px;
+      width: 150px;
+      height: 40px;
+      left: 450px;
+      z-index: 100;
+      display:block;
+      overflow: auto;
+    }
+    #start {
+      position: absolute;
+      top: 5px;
+      width: 100px;
+      height: 40px;
+      left: 650px;
+      z-index: 100;
+      display:block;
+      overflow: auto;
+    }
+    #typeMapGround {
+      position: absolute;
+      top: 5px;
+      width: 100px;
+      height: 40px;
+      left: 800px;
+      z-index: 100;
+      display:block;
+      overflow: auto;
+    }
+    #typeMapStart {
+      position: absolute;
+      top: 5px;
+      width: 100px;
+      height: 40px;
+      left: 950px;
+      z-index: 100;
+      display:block;
+      overflow: auto;
+    }
+
+</style>
+<script src="carJS.js"></script>
