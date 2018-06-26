@@ -56,7 +56,7 @@ function initCars(){
 var jeu = {
   map: [],
   listCar: [],
-  nbCars: 100, // pair : %2 == 0
+  nbCars: 1000, // pair : %2 == 0
   positionX: 50,
   positionY: 50,
   widthCase: 18, // pair
