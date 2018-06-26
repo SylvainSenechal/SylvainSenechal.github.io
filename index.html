@@ -6,15 +6,15 @@
   <body>
 
     <div class="un">
-      <div id="ho"> ho </div> 
+      <div id="ho"> ho </div>
     </div>
 
     <div class="deux">
-      <div id="hu"> hu </div> 
+      <div id="hu"> hu </div>
     </div>
+<button onclick="alertCookie()">Show cookies</button>
 
-
-    <div class="container-fluid">    
+    <div class="container-fluid">
       <div class="row no-gutters">
         <div class="col-sm-2" style="background-color:yellow;">33.33%</div>
         <div class="col-sm-8" style="background-color:orange;">
@@ -25,7 +25,7 @@
         <div class="col-sm-2" style="background-color:yellow;">33.33%</div>
       </div>
     </div>
-    <div class="container-fluid">    
+    <div class="container-fluid">
       <div class="row no-gutters">
         <div class="col-sm-2" style="background-color:yellow;">33.33%</div>
         <div class="col-sm-8" style="background-color:orange;">
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <div class="container-fluid">    
+    <div class="container-fluid">
       <div class="row no-gutters">
         <div class="col-sm-2">33.33%</div>
         <div class="col-sm-8">
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <div class="container-fluid">    
+    <div class="container-fluid">
       <div class="row no-gutters">
         <div class="col-sm-2">33.33%</div>
         <div class="col-sm-8">
@@ -61,7 +61,7 @@
       </div>
     </div>
 
-    <div class="container-fluid">    
+    <div class="container-fluid">
       <div class="row no-gutters">
         <div class="col-sm-2">33.33%</div>
         <div class="col-sm-8">
@@ -72,7 +72,7 @@
         <div class="col-sm-2">33.33%</div>
       </div>
     </div>
-     
+
 
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
@@ -98,4 +98,11 @@ document.onmousemove = function(e){
 document.body.classList.remove('ah')
   document.body.classList.add('eh')
 }
+
+document.cookie = "name=oeschger";
+document.cookie = "favorite_food=tripe";
+function alertCookie() {
+  alert(document.cookie);
+}
+
 </script>
