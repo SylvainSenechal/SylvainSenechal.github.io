@@ -42,8 +42,8 @@ function loop(){ // Voir l'ordre des fonctions
 // calculateProbability()
 
 var Global = {
-  Target: 'Je suis a deviner si tu peux mais tu pourra pas me trouver meme en cherchant tres fort^^ eh oui je suis l introuvable qui finira peut-etre par etre trouve',
-  populationSize: 500,
+  Target: 'Je suis a deviner si tu peux mais tu ne pourra pas me trouver meme en cherchant tres fort^^ eh oui je suis l introuvable qui finira peut-etre par etre trouve',
+  populationSize: 1000,
   population: [],
   nbGeneration: 1,
   maxFitness: 0,
