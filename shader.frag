@@ -9,5 +9,6 @@ uniform float u_time;       // Time in seconds since load
 
 // Ajouter un effet de molette amortissement quand on descend
 void main() {
-	gl_FragColor = vec4(sin(u_mouse.x), cos(u_mouse.x), sin(0.4*u_mouse.x), 1.0);
+  vec2 mouse = u_mouse/u_resolution;
+	gl_FragColor = vec4(sin(u_time)*mouse.x, cos(u_time)*mouse.x, sin(u_time)*mouse.y, 1.0);
 }
