@@ -15,7 +15,10 @@
 }
 .foot{
   grid-area: footer;
+}
 
+body {
+  margin: 0px;
 }
 
 .container {
