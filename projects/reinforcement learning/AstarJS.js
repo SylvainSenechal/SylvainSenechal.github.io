@@ -1,3 +1,5 @@
+// Voir le problème de hypothénuse aussi longue que 2 côtés triangle rectangle
+
 var mouseDown = false
 document.onmousedown = function(e){
   mouseDown = true
@@ -29,6 +31,19 @@ const clearMap = () => {
   Terrain.grid.forEach( line => {
     line.forEach( cell => cell.value = 0 )
   })
+}
+const randomWalls = () => {
+  Terrain.grid.forEach( line => {
+    line.forEach( cell => {
+      if(Math.random() > Terrain.percentObstacle) Terrain.grid[cell.x][cell.y] = new Node(cell.x, cell.y, 0)
+      else Terrain.grid[cell.x][cell.y] = new Node(cell.x, cell.y, 1)
+    } )
+  })
+  Terrain.grid[0][0].value = 0
+  Terrain.grid[Terrain.sizeX-1][Terrain.sizeY-1].value = 0
+  Terrain.grid[0][0].f = dst(0, 0, Terrain.sizeX, Terrain.sizeY)
+  Terrain.currentNode = Terrain.grid[0][0]
+  Terrain.openList.push(Terrain.currentNode)
 }
 
 window.addEventListener('load', init);

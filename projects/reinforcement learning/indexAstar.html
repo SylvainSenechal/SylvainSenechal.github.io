@@ -9,6 +9,7 @@
         </canvas>
         <button type="button" id="start" onclick="start()"> Start A* </button>
         <button type="button" id="clear" onclick="clearMap()"> Remove all walls </button>
+        <button type="button" id="randomWalls" onclick="randomWalls()"> Generate random walls </button>
         <div class="slider">
           <p id="slideVal">Speed(1-10) : 1</p>
           <input type="range" min="1" max="10" value="1" id="slider">
@@ -16,44 +17,53 @@
     </body>
 </html>
 <style>
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0px;
-      border: 0px;
-      overflow: hidden; /*  Disable scrollbars */
-      display: block;  /* No floating content on sides */
-    }
-    #start {
-      position: absolute;
-      top: 5px;
-      width: 150px;
-      height: 40px;
-      left: 810px;
-      z-index: 100;
-      display:block;
-      overflow: auto;
-    }
-    #clear {
-      position: absolute;
-      top: 50px;
-      width: 150px;
-      height: 40px;
-      left: 810px;
-      z-index: 100;
-      display:block;
-      overflow: auto;
-    }
-    .slider {
-      position: absolute;
-      top: 100px;
-      width: 150px;
-      height: 80px;
-      left: 810px;
-      z-index: 100;
-      display:block;
-      overflow: auto;
-    }
-
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    border: 0px;
+    overflow: hidden; /*  Disable scrollbars */
+    display: block;  /* No floating content on sides */
+  }
+  #start {
+    position: absolute;
+    top: 5px;
+    width: 150px;
+    height: 40px;
+    left: 810px;
+    z-index: 100;
+    display:block;
+    overflow: auto;
+  }
+  #clear {
+    position: absolute;
+    top: 50px;
+    width: 150px;
+    height: 40px;
+    left: 810px;
+    z-index: 100;
+    display:block;
+    overflow: auto;
+  }
+  #randomWalls {
+    position: absolute;
+    top: 100px;
+    width: 150px;
+    height: 40px;
+    left: 810px;
+    z-index: 100;
+    display:block;
+    overflow: auto;
+  }
+  #slider {
+    position: absolute;
+    top: 150px;
+    width: 150px;
+    height: 80px;
+    left: 810px;
+    z-index: 100;
+    display:block;
+    overflow: auto;
+  }
 </style>
 <script src="AstarJS.js"></script>

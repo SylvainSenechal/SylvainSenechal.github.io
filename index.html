@@ -8,6 +8,7 @@
     <meta charset="utf-8">
     <link rel="manifest" href="/manifest.json">
 
+    <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124438376-1"></script>
     <script>
@@ -18,13 +19,20 @@
     </script>
   </head>
   <body>
-    <div class="listProjects">
-      <button onclick="location.href='projects/game of life/gol.html'" class="oui">The Game of Life</button>
-      <button onclick="location.href='projects/open world/opnworld.html'" class="oui">3D Open World</button>
-      <button onclick="location.href='projects/reinforcement learning/indexCar.html'" class="oui">Reinforcement learning : Cars</button>
-      <button onclick="location.href='projects/reinforcement learning/indexFlappy.html'" class="oui">Reinforcement learning : Flappy Bird</button>
-      <button onclick="location.href='projects/reinforcement learning/indexMorpion.html'" class="oui">Reinforcement learning : Tic-Tac-Toe</button>
+
+    <div class="container">
+      <header class="header"> bonjour </header>
+      <div class="listProjects">
+        <button class="oui" onclick="location.href='projects/game of life/gol.html'">The Game of Life</button>
+        <button class="oui" onclick="location.href='projects/open world/opnworld.html'">3D Open World</button>
+        <button class="oui" onclick="location.href='projects/reinforcement learning/indexCar.html'">Reinforcement learning : Cars</button>
+        <button class="oui" onclick="location.href='projects/reinforcement learning/indexFlappy.html'">Reinforcement learning : Flappy Bird</button>
+        <button class="oui" onclick="location.href='projects/reinforcement learning/indexMorpion.html'">Reinforcement learning : Tic-Tac-Toe</button>
+      </div>
+      <div class="foot"> footer </div>
     </div>
+    <canvas class="glslCanvas" data-fragment-url="shader.frag" width="500" height="500"></canvas>
+
 
 
     <!-- <form method="get" action="projects/game of life/gol.html">
@@ -35,18 +43,38 @@
   </body>
 </html>
 <style>
-  * {
-    box-sizing: border-box;
+  .header{
+    grid-area: header;
+    /* justify-self: center; */
   }
-  /* .header {
-      border: 1px solid red;
-      padding: 15px;
-  } */
-  .listProjects {
-      width: 25%;
-      float: left;
-      padding: 15px;
-      border: 1px solid red;
+  .listProjects{
+    grid-area: contenu;
+    justify-self: center;
+  }
+  .oui {
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #a142f4;
+    color: #ffffff;
+    font-size: 150%;
+  }
+  .foot{
+    grid-area: footer;
+  }
+
+  .container {
+    /* padding: 10px; */
+    display: grid;
+    grid-row-gap: 35px;
+    grid-template-rows: 100px 100px 100px;
+    grid-template-columns: 25% auto 25%;
+    grid-template-areas: 'header header header'
+                        ' ..... contenu .....'
+                        'footer footer footer';
+    justify-items: center;
+    align-items: center;
+    /* justify-content: start; */
+    background-color: blue;
   }
 
   /* .oui {
