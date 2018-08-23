@@ -3,11 +3,13 @@
   <head>
     <title>Sylvain Senechal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Personal website and portfolio. Various projects available for testing as well as my résumé ">
-    <meta name="author" content="Sylvain Sénéchal">
+    <meta name="description" content="Personal website and portfolio. Various projects available for testing as well as my resume ">
+    <meta name="author" content="Sylvain Senechal">
     <meta charset="utf-8">
-    <link rel="manifest" href="/manifest.json">
 
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="script.js" defer></script>
     <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124438376-1"></script>
@@ -42,56 +44,3 @@
 
   </body>
 </html>
-<style>
-  .header{
-    grid-area: header;
-    /* justify-self: center; */
-  }
-  .listProjects{
-    grid-area: contenu;
-    justify-self: center;
-  }
-  .oui {
-    border-radius: 5px;
-    padding: 10px;
-    background-color: #a142f4;
-    color: #ffffff;
-    font-size: 150%;
-  }
-  .foot{
-    grid-area: footer;
-  }
-
-  .container {
-    /* padding: 10px; */
-    display: grid;
-    grid-row-gap: 35px;
-    grid-template-rows: 100px 100px 100px;
-    grid-template-columns: 25% auto 25%;
-    grid-template-areas: 'header header header'
-                        ' ..... contenu .....'
-                        'footer footer footer';
-    justify-items: center;
-    align-items: center;
-    /* justify-content: start; */
-    background-color: blue;
-  }
-
-  /* .oui {
-    animation-name: blur;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-  }
-
-  @keyframes blur {
-    from{filter: blur(0px);}
-    to {filter: blur(2px);}
-  } */
-</style>
-
-<script>
-// outils pour voir si référencé
-// analytics
-
-</script>

@@ -1,0 +1,51 @@
+.header{
+  grid-area: header;
+  /* justify-self: center; */
+}
+.listProjects{
+  grid-area: contenu;
+  justify-self: center;
+}
+.oui {
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #a142f4;
+  color: #ffffff;
+  font-size: 150%;
+}
+.foot{
+  grid-area: footer;
+}
+
+.container {
+  /* padding: 10px; */
+  display: grid;
+  grid-row-gap: 35px;
+  grid-template-rows: 100px 100px 100px;
+  grid-template-columns: 25% auto 25%;
+  grid-template-areas: 'header header header'
+                      ' ..... contenu .....'
+                      'footer footer footer';
+  justify-items: center;
+  align-items: center;
+  /* justify-content: start; */
+  background-color: blue;
+}
+
+.glslCanvas{
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* .oui {
+  animation-name: blur;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes blur {
+  from{filter: blur(0px);}
+  to {filter: blur(2px);}
+} */
