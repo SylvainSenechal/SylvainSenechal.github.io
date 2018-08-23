@@ -15,11 +15,13 @@
 }
 .foot{
   grid-area: footer;
+
 }
 
 .container {
   /* padding: 10px; */
   display: grid;
+
   grid-row-gap: 35px;
   grid-template-rows: 100px 100px 100px;
   grid-template-columns: 25% auto 25%;
@@ -29,7 +31,7 @@
   justify-items: center;
   align-items: center;
   /* justify-content: start; */
-  /* background-color: blue; */
+  background-color: rgba(255, 0, 0, 0.3);
 }
 
 .glslCanvas{
