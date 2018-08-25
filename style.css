@@ -1,43 +1,88 @@
+/* voir css barré dans chrome */
+body {
+  margin: 0px;
+}
+/*
+.header {
+  grid-area: hd;
+}
+.footer {
+  grid-area: ft;
+}
+.listProjects {
+  grid-area: main;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-auto-rows: 100px 300px 100px;
+  grid-template-areas:
+    "hd hd hd hd hd hd hd hd hd"
+    ". . main main main main main main ."
+    ". ft ft ft ft ft ft ft ft";
+}
+
+.container {
+  border: 2px solid #f76707;
+  border-radius: 5px;
+  background-color: #fff4e6;
+}
+
+.container > * {
+  border: 2px solid #ffa94d;
+  border-radius: 5px;
+  background-color: #ffd8a8;
+  padding: 1em;
+  color: #d9480f;
+} */
+
+.container {
+  display: grid;
+  position: relative;
+  grid-gap: 35px;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: 100px 300px 100px;
+  grid-template-areas: ' header header header header header header header header header '
+                      ' . . contenu contenu contenu contenu contenu . . '
+                      ' footer footer footer footer footer footer footer footer footer ';
+  justify-items: center;
+  align-items: center;
+  justify-content: start;
+  background-color: rgba(255, 0, 0, 0.3);
+  border: 2px solid #f76707;
+  border-radius: 5px;
+}
+
+.container > * {
+  border: 2px solid #ffa94d;
+  border-radius: 5px;
+  background-color: #ffd8a8;
+  /* padding: 1em; */
+  color: #d9480f;
+}
+
+/* prendre taille du parent */
 .header{
   grid-area: header;
-  /* justify-self: center; */
+  justify-self: center;
 }
 .listProjects{
   grid-area: contenu;
   justify-self: center;
+  height: 100%;
+  width: 100%
+
 }
-.oui {
-  border-radius: 5px;
-  padding: 10px;
-  background-color: #a142f4;
-  color: #ffffff;
-  font-size: 150%;
-}
-.foot{
+
+.footer{
   grid-area: footer;
 }
 
-body {
-  margin: 0px;
+.oui {
+  color: #ffffff;
+  font-size: 150%;
 }
-
-/* voir css barré dans chrome */
-.container {
-  /* padding: 10px; */
-  display: grid;
-  position: relative;
-  grid-row-gap: 35px;
-  grid-template-rows: 100px 100px 100px;
-  grid-template-columns: 25% auto 25%;
-  grid-template-areas: 'header header header'
-                      ' ..... contenu .....'
-                      'footer footer footer';
-  justify-items: center;
-  align-items: center;
-  /* justify-content: start; */
-  /* background-color: rgba(255, 0, 0, 0.3); */
-}
-
 .glslCanvas{
   position: fixed;
   width: 100%;
