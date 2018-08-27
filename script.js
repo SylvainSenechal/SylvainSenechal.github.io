@@ -20,27 +20,26 @@ console.log(pj)
 var uniforms
 var scene, camera, fieldOfView, aspectRatio, height, width, nearPlane, farPlane, renderer, container
 
-const init = () => {
+init = function(){
   createScene()
   //createLights() // A ajouter
-//  createMesh()
-  var a;
-  //resizeScene() // A appeler dans create scene ?
+  createMesh()
+  resizeScene() // A appeler dans create scene ?
   loop()
 }
 
-const loop = () => {
+loop = function(){
   render()
 
   requestAnimationFrame(loop)
 }
 
-const render = () => {
+render = function(){
   uniforms.u_time.value += 60/1000
   renderer.render( scene, camera )
 }
 
-const createScene = () => {
+createScene = function(){
   scene = new THREE.Scene()
 
   aspectRatio = width / height
@@ -67,7 +66,7 @@ const createScene = () => {
   container.appendChild(renderer.domElement)
 }
 
-const createMesh = () => {
+createMesh = function(){
   var geometry = new THREE.PlaneBufferGeometry(2, 2)
 
   uniforms = {
@@ -92,7 +91,7 @@ document.onmousemove = function(e){
 }
 
 
-const resizeScene = () => {
+resizeScene = function(){
   console.log('oui')
 	height = window.innerHeight
 	width = window.innerWidth
