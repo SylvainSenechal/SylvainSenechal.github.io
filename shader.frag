@@ -70,5 +70,5 @@ void main() {
     color += fbm(st*3.0 + r*3.);
 	color = mix(color, vec3(0.3, 0.1, 0.2), 0.5);
 
-    gl_FragColor = vec4((f*f*f+0.6*f*f+0.5*f)*color, 1.0*(1.-dst));
+    gl_FragColor = vec4((f*f*f+0.6*f*f+0.5*f)*color, 1.0);
 }
