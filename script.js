@@ -23,7 +23,7 @@ var scene, camera, fieldOfView, aspectRatio, height, width, nearPlane, farPlane,
 const init = () => {
   createScene()
   //createLights() // A ajouter
-  createMesh()
+//  createMesh()
 
   resizeScene() // A appeler dans create scene ?
   loop()
