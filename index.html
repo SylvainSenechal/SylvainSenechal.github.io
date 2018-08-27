@@ -93,17 +93,17 @@
         q.x = fbm(st*3.0 + vec2(0.0, 0.0) );
         q.y =  fbm(st*3.0 + vec2(5.2, 1.3));
 
-        r.x = fbm(st*3.0 + q*3.0 + vec2(0.730,.210));
-        r.y = fbm(st*3.0 + q*3.0 + vec2(9.2, .8));
+        r.x = fbm(st*3.0 + q*3.0 + vec2(0.730,.210) - u_time*0.0058);
+        r.y = fbm(st*3.0 + q*3.0 + vec2(9.2, .8) + u_time*0.02781);
 
-        m.x = fbm(st*3.0 + r*3.0 + vec2(0.1730,.210) - u_time*0.00058);
-        m.y = fbm(st*3.0 + r*3.0 + vec2(0.30,.210) + u_time*0.002781);
+        // m.x = fbm(st*3.0 + r*3.0 + vec2(0.1730,.210) - u_time*0.00058);
+        // m.y = fbm(st*3.0 + r*3.0 + vec2(0.30,.210) + u_time*0.002781);
+        //
+        // n.x = fbm(st*3.0 + m*3.0 + vec2(0.1730,.210) + u_time*0.0478);
+        // n.y = fbm(st*3.0 + m*3.0 + vec2(0.30,.210) - u_time*0.0098);
+        float f = fbm(st*3.0 + r*3.);
 
-        n.x = fbm(st*3.0 + m*3.0 + vec2(0.1730,.210) + u_time*0.0478);
-        n.y = fbm(st*3.0 + m*3.0 + vec2(0.30,.210) - u_time*0.0098);
-        float f = fbm(st*3.0 + n*3.);
-
-        color += fbm(st*3.0 + n*3.);
+        color += fbm(st*3.0 + r*3.);
         color = mix(color, vec3(0.783, 0.1, 0.5), 1.-dst);
         //color = mix(color, vec3(0.783, 0.1, 0.5), 1.-dst);
 
