@@ -25,7 +25,7 @@ const init = () => {
   //createLights() // A ajouter
 //  createMesh()
 
-  resizeScene() // A appeler dans create scene ?
+  //resizeScene() // A appeler dans create scene ?
   loop()
 }
 
