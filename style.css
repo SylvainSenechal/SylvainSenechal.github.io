@@ -83,12 +83,13 @@ body {
   /* color: #ffffff; */
   font-size: 150%;
 }
-.glslCanvas{
+canvas{
   position: fixed;
   width: 100%;
   height: 100%;
   z-index: -1;
 }
+
 
 
 /* .oui {
