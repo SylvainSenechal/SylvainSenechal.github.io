@@ -29,7 +29,7 @@
     <script id="fragmentShader" type="x-shader/x-fragment">
 
     #ifdef GL_ES
-    precision highp float;
+    precision mediump float;
     #endif
 
     uniform vec2 u_resolution;
@@ -69,20 +69,21 @@
         float frequency = 0.;
         //
         // Loop of octaves
-        mat2 rot = mat2(cos(0.5), sin(0.5),
-                        -sin(0.5), cos(0.50));
+        const mat2 m = mat2( 0.80,  0.60, -0.60,  0.80 );
         for (int i = 0; i < OCTAVES; i++) {
             value += amplitude * noise(st);
-            st = rot*st*2.;
+            st = m*st*2.;
             amplitude *= .5;
         }
         return value;
     }
 
     void main() {
-        vec2 st = gl_FragCoord.xy/u_resolution.xy;
+        //vec2 st = gl_FragCoord.xy/u_resolution.y;
+        vec2 st = (-u_resolution.xy+2.0*gl_FragCoord.xy)/u_resolution.y;
+
         //st.x *= u_resolution.x/u_resolution.y;
-        float dst = distance(st, u_mouse/u_resolution.xy);
+        float dst = distance(st, (-u_resolution.xy+2.0*u_mouse)/u_resolution.y);
 
         vec3 color = vec3(0.0);
         vec2 q = vec2(1.0);
@@ -104,6 +105,7 @@
 
         color += fbm(st*3.0 + n*3.);
         color = mix(color, vec3(0.783, 0.1, 0.5), 1.-dst);
+        //color = mix(color, vec3(0.783, 0.1, 0.5), 1.-dst);
 
         gl_FragColor = vec4((f*f*f+0.6*f*f+0.5*f)*color, 1.0);
     }
