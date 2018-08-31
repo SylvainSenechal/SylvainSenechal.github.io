@@ -1,7 +1,7 @@
 ///////////////////// VARIABLES
 var stats = new Stats();
 stats.showPanel(1); // 0: fps, 1: ms, 2: mb, 3+: custom
-document.body.appendChild( stats.dom ); 
+document.body.appendChild( stats.dom );
 
 var i, j;
 var u, uu, uuu;
@@ -36,14 +36,14 @@ var textClass = function(){
 
 var colorSea = function(){
 	this.color = "0xff0000"
-} 
+}
 var colorS = new colorSea()
 function initGUI(){
 	var gui = new dat.GUI()
 	console.log(sea.mesh.material.color)
 	//gui.add(text, 'pouet')
 	var text = new textClass()
-	
+
 	gui.add(text, 'message', ['pizza', 'bonjour']);
 	gui.add(sea.mesh.material, 'opacity')
 	gui.add(sea.mesh.material, 'transparent')
@@ -53,7 +53,7 @@ function initGUI(){
 		sea.mesh.material.color.setHex(value)
 	})
 }
-function loop(){ 
+function loop(){
 		requestAnimationFrame(loop);
 	stats.begin();
 	//animateTree();
@@ -69,22 +69,22 @@ function loop(){
 	moveSun();
 	//mousePicker();
 	//sea.mesh.geometry.dispose();
-	
+
 	renderer.render(scene, camera);
 	stats.end();
-	
+
 
 }
 
 function mousePicker(){
 
-	
+
 	var material = new THREE.LineBasicMaterial({
 		color: 0x0000ff
 	});
 	var rayO = new THREE.Vector3()
 	rayO.setFromMatrixPosition( camera.matrixWorld );
-	
+
 	var dire = new THREE.Vector3()
 	dire.set( mouse.x, mouse.y, 0.5 ).unproject( camera ).sub( rayO ).normalize(); // tester console.log le vecteur avec 0.5, 0 ,1
 
@@ -93,7 +93,7 @@ function mousePicker(){
 	console.log(ray.direction.x)
 	console.log(ray.direction.y)
 	console.log(ray.direction.z)*/
-	
+
 	var geometry = new THREE.Geometry();
 	geometry.vertices.push(
 		new THREE.Vector3(rayO.x, rayO.y, rayO.z ),
@@ -114,12 +114,12 @@ document.onmousemove = function vue(e){
 
 	mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
 	mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
-	
+
 	camera.rotation.order = 'YXZ'; // default is 'XYZ'
 	camera.rotateX(-e.movementY*0.2*Math.PI/180);
 	camera.rotateY(-e.movementX*0.2*Math.PI/180);
 	camera.rotation.z = 0;
-	
+
 	// usefull stuff ?? :
 	//cameraRotateX -= e.movementX*0.5;
 	//cameraRotateY -= e.movementY*0.5;
@@ -158,7 +158,7 @@ function createScene(){
 	renderer = new THREE.WebGLRenderer({ // voir tous les arguments existants
 		alpha: true,
 		antialias: true,
-		//physicallyCorrectLights: true	
+		//physicallyCorrectLights: true
 		//toneMapping: THREE.ReinhardToneMapping
 		//cull: THREE.CullFaceFront
 		shadowMap: THREE.PCFSoftShadowMap
@@ -170,7 +170,7 @@ function createScene(){
 	container = document.getElementById('jeu'); // REMPLACER PAR JQUERY
 	container.appendChild(renderer.domElement);
 
-	window.addEventListener('resize', resize, false); 
+	window.addEventListener('resize', resize, false);
 }
 
 var hemisphereLight, shadowLight;
@@ -198,7 +198,7 @@ function createLights(){
 	var helper = new THREE.PointLightHelper(shadowLight, 500)
 	scene.add(helper)
 
-	scene.add(hemisphereLight);  
+	scene.add(hemisphereLight);
 	scene.add(shadowLight);
 
 }
@@ -259,12 +259,12 @@ Ground = function(){
 	for(i=0; i<offsetNoiseArray; i++){
 		arrayNoise[i] = Math.random()
 	}
-	for(i=0; i<nbXvert; i++){ 
+	for(i=0; i<nbXvert; i++){
 		for(j=0; j<nbYvert; j++){
 			arrayNoise[offsetNoiseArray+i+j*nbYvert] = Math.random()
 		}
 	}
-	for(i=0; i<nbXvert; i++){ 
+	for(i=0; i<nbXvert; i++){
 		for(j=0; j<nbYvert; j++){
 			geomGround.vertices[i+j*nbYvert].x +=  0//20 +Math.random()*50
 			geomGround.vertices[i+j*nbYvert].z +=  0//20 +Math.random()*50
@@ -278,7 +278,7 @@ Ground = function(){
 		opacity:1,
 		vertexColors: THREE.FaceColors,
 		shading:THREE.FlatShading,
-		side: THREE.DoubleSide //THREE.BackSide, 
+		side: THREE.DoubleSide //THREE.BackSide,
 		//shadowSide: THREE.BothSide,
 		//clipShadows: true
 		//blending: THREE.NormalBlending,
@@ -297,8 +297,8 @@ Ground = function(){
 	for(i=0; i<this.mesh.geometry.faces.length; i++){
 		sumFaceVertexY +=   this.mesh.geometry.vertices[this.mesh.geometry.faces[i].a].y +
 							this.mesh.geometry.vertices[this.mesh.geometry.faces[i].b].y +
-							this.mesh.geometry.vertices[this.mesh.geometry.faces[i].c].y 
-		
+							this.mesh.geometry.vertices[this.mesh.geometry.faces[i].c].y
+
 		this.mesh.geometry.faces[i].color.setRGB(0, (sumFaceVertexY/3-30)/(500-30), 0) // (x-min)/(max-min)
 		if(sumFaceVertexY<0){
 			this.mesh.geometry.faces[i].color.setRGB(237/255, 237/255, 16/255)
@@ -319,7 +319,7 @@ Sea = function(){
 		geom.vertices[i].z += 0//Math.random()*10
 	}
 
-	
+
 	//geom.mergeVertices();
 
 	var l = geom.vertices.length;
@@ -341,7 +341,7 @@ Sea = function(){
 			// a random distance
 			amp: 10 + Math.random()*20,
 			// a random speed between 0.016 and 0.048 radians / frame
-			speed:0.016 + Math.random()*0.032 
+			speed:0.016 + Math.random()*0.032
 		})
 	}
 	/////////////////////////////////////////////
@@ -405,8 +405,8 @@ Sea = function(){
 		//flatShading: true,
 		//depthTest:      false,
 		//combine : THREE.AddOperation
-		
-		
+
+
 		//emissive: 0x0000ff
 	});
 
@@ -437,7 +437,7 @@ document.onclick = function cl(e){
 	else{
 
 		cylinder.position.z -= 5
-		
+
 	}
 
 
@@ -450,10 +450,10 @@ document.onclick = function cl(e){
 
 var verts, lg;
 Sea.prototype.moveWaves = function (){
-	
+
 	verts = this.mesh.geometry.vertices;
 	lg = verts.length;
-	
+
 	for (var i=0; i<lg; i++){
 		var v = verts[i];
 
@@ -497,7 +497,7 @@ function createSun(){
 }
 
 Sun = function(){
-	var sunGeom = new THREE.IcosahedronGeometry(1000, 1);	
+	var sunGeom = new THREE.IcosahedronGeometry(1000, 1);
 	var mat = new THREE.MeshPhongMaterial({
 		color:0xcc5012,
 		transparent:false,
@@ -591,7 +591,7 @@ function createTree1(){
 			tree1Array[TI].treeObject.position.x = poserArbre.x;
 			tree1Array[TI].treeObject.position.y = poserArbre.y;
 			tree1Array[TI].treeObject.position.z = poserArbre.z;
-			tree1Array[TI].treeObject.rotateY(360*Math.random()*Math.PI/180) 
+			tree1Array[TI].treeObject.rotateY(360*Math.random()*Math.PI/180)
 			posXtest += 20
 			//t1.mesh.position.z = 0;
 			//t1.mesh.position.x = 0;
@@ -627,7 +627,7 @@ function animateTree(){
 			www.vertices[i+3].x += -0.1 + (0.2*Math.random());
 			www.vertices[i+3].y += -0.1 + (0.2*Math.random());
 			www.vertices[i+3].z += -0.1 + (0.2*Math.random());
-			
+
 			//nbtourne += 3
 		}
 		www.verticesNeedUpdate = true;
@@ -657,7 +657,7 @@ function rayMouse() {
 	raycasterMouse.near = 0
 	raycasterMouse.far  = 10000
 
-	raycasterMouse.setFromCamera( mouse, camera );	
+	raycasterMouse.setFromCamera( mouse, camera );
 	var intersectsMouse = raycasterMouse.intersectObjects( scene.children );
 	for (i=0; i<intersectsMouse.length; i++) {
 		if(i == 0){
@@ -691,7 +691,7 @@ function rayMouse() {
 var haut, bas, droite, gauche;
 var vitesseX = 0;
 var vitesseY = 0;
-document.onkeydown = function pression(e){			
+document.onkeydown = function pression(e){
 	if(e.keyCode == 90){ haut 	= 	true; }
 	if(e.keyCode == 68){ droite = 	true; }
 	if(e.keyCode == 83){ bas 	= 	true; }
@@ -734,7 +734,7 @@ function vitesse(){
 	var VectResGetWDir = new THREE.Vector3();
 	var composanteX = -(vitesseY * camera.getWorldDirection(VectResGetWDir).x)   + vitesseX * (-camera.getWorldDirection(VectResGetWDir).z)
 	var composanteY =   vitesseY * (-camera.getWorldDirection(VectResGetWDir).z) + vitesseX * camera.getWorldDirection(VectResGetWDir).x
-	
+
 	camera.position.x += composanteX; // gauche droite   vitesseX
 	camera.position.z += composanteY; // devant derrière vitesseY 	// A noter : ici composante Y actionne l'axe Z
 	camera.position.y += -vitesseY*camera.getWorldDirection(VectResGetWDir).y

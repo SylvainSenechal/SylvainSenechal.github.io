@@ -67,7 +67,7 @@ createScene = function(){
 }
 
 createMesh = function(){
-  var geometry = new THREE.PlaneBufferGeometry(2, 2)
+  var geometry = new THREE.PlaneBufferGeometry(2, 2, 4, 4)
 
   uniforms = {
       u_time: { type: "f", value: 1.0 },

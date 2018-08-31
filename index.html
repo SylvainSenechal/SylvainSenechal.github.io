@@ -81,6 +81,7 @@
     void main() {
         //vec2 st = gl_FragCoord.xy/u_resolution.y;
         vec2 st = (-u_resolution.xy+2.0*gl_FragCoord.xy)/u_resolution.y;
+        //vec2 st = gl_FragCoord.xy/u_resolution.y*2.-1.;
 
         //st.x *= u_resolution.x/u_resolution.y;
         float dst = distance(st, (-u_resolution.xy+2.0*u_mouse)/u_resolution.y);

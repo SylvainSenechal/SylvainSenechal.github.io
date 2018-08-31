@@ -1,0 +1,299 @@
+<style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      border: 0px;
+      overflow: hidden; /*  Disable scrollbars */
+      display: block;  /* No floating content on sides */
+    }
+
+</style>
+<body>
+<div id="container"></div>
+</body>
+
+<script src="three.min.js"></script>
+<script id="vertexShader" type="x-shader/x-vertex">
+uniform float u_time;
+
+float random (in vec2 st) {
+    return fract(sin(dot(st.xy,
+                         vec2(12.9898,78.233)))*
+        43758.5453123);
+}
+
+void main() {
+  vec2 pixel = vec2(1.0);
+  float X = position.x*25.+u_time;
+  float Y = position.y*25.+u_time;
+  pixel.y += cos(X+Y)*0.1*cos(Y);
+  pixel.x += sin(X-Y)*0.01*sin(Y);
+
+  gl_Position = projectionMatrix *
+                modelViewMatrix *
+                vec4(position+vec3(0.0, 0.0, -130.+pixel.y*100.),.5);
+}
+</script>
+<script id="fragmentShader" type="x-shader/x-fragment">
+
+uniform sampler2D tex;
+uniform sampler2D norm;
+uniform vec2 u_resolution;
+uniform float u_time;
+uniform vec2 u_mouse;
+uniform vec3 light;
+
+void main() {
+  vec2 pixel = gl_FragCoord.xy / u_resolution.xy;
+  //pixel.x += cos(pixel.y*25.) * 0.03 * cos(u_time*4.);
+  //pixel.y += cos(pixel.x*25.) * 0.03 * cos(u_time*0.1);
+  //pixel.y += cos(pixel.x*5. + u_time) * 0.03;
+  vec3 color = vec3(0.0,0.1,0.8);
+
+  gl_FragColor = vec4(color, .5);
+}
+</script>
+<script>
+var uniforms
+var scene, camera, fieldOfView, aspectRatio, height, width, nearPlane, farPlane, renderer, container
+
+const init = () => {
+  createScene()
+  createLights()
+  createMesh()
+  createSun()
+
+  resizeScene() // A appeler dans create scene ?
+  loop()
+}
+
+const loop = () => {
+  render()
+  vitesse()
+
+  requestAnimationFrame(loop)
+}
+
+const render = () => {
+  uniforms.u_time.value += 0.05
+  renderer.render( scene, camera )
+}
+
+const createScene = () => {
+  scene = new THREE.Scene()
+
+  aspectRatio = width / height
+	fieldOfView = 60
+	nearPlane = 1
+	farPlane = 40000
+  camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane)
+	camera.rotation.order = 'YXZ' // default is 'XYZ'
+	camera.position.x = 0 // gauche/droite
+	camera.position.z = 1 // profondeur
+	camera.position.y = 0 // hauteur
+
+  renderer = new THREE.WebGLRenderer({ // voir tous les arguments existants
+		//alpha: true,
+		antialias: true,
+		shadowMap: THREE.PCFSoftShadowMap
+	});
+  height = window.innerHeight
+	width = window.innerWidth
+	renderer.setSize(width, height)
+	renderer.shadowMap.enabled = true
+
+  container = document.getElementById( 'container' )
+  container.appendChild(renderer.domElement)
+}
+
+var shaderMesh
+const createMesh = () => {
+  var geometry = new THREE.PlaneGeometry(500, 500, 50, 50)
+
+  var textureURL = "https://raw.githubusercontent.com/tutsplus/Beginners-Guide-to-Shaders/master/Part3/images/blocks.JPG"
+  //THREE.ImageUtils.crossOrigin = '';//Allows us to load an external image
+  //var texture = THREE.ImageUtils.loadTexture(textureURL);
+  var texture = new THREE.TextureLoader().load(textureURL);
+  var normalURL = "https://raw.githubusercontent.com/tutsplus/Beginners-Guide-to-Shaders/master/Part3/normal_maps/blocks_normal.JPG"
+  var normal = new THREE.TextureLoader().load(normalURL);
+
+  uniforms = {
+    u_time: { type: "f", value: 1.0 },
+    u_resolution: { type: "v2", value: new THREE.Vector2() },
+    u_mouse: { type: "v2", value: new THREE.Vector2() },
+    tex: {type:'t',value:texture},
+    norm: {type:'t', value: normal},
+    light: {type:'v3', value:new THREE.Vector3()},
+  };
+  uniforms.light.value.z = 0.3;//Our radius
+
+  var material = new THREE.ShaderMaterial( {
+      uniforms: uniforms,
+      vertexShader: document.getElementById( 'vertexShader' ).textContent,
+      fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+      transparent: true,
+  } );
+
+  shaderMesh = new THREE.Mesh(geometry, material)
+  shaderMesh.position.set(0, 0, 0)
+  shaderMesh.rotation.x =- ((Math.PI*90/180))
+  shaderMesh.position.y = 0
+  shaderMesh.position.z = 0
+  scene.add(shaderMesh)
+}
+
+document.onmousemove = event => {
+  uniforms.light.value.x = event.clientX;
+  uniforms.light.value.y = height - event.clientY;
+
+	camera.rotateX(-event.movementY*0.2*Math.PI/180)
+	camera.rotateY(-event.movementX*0.2*Math.PI/180)
+
+	camera.rotation.z = 0
+
+}
+
+
+
+const resizeScene = () => {
+  height = window.innerHeight
+	width = window.innerWidth
+	camera.aspect = width / height
+	camera.updateProjectionMatrix()
+	renderer.setSize(width, height)
+  uniforms.u_resolution.value.x = renderer.domElement.width
+  uniforms.u_resolution.value.y = renderer.domElement.height
+}
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+function createSun(){
+	sun = new Sun();
+	sun.mesh.position.x = shadowLight.position.x;
+	sun.mesh.position.y = shadowLight.position.y;
+	sun.mesh.position.z = shadowLight.position.z;
+	scene.add(sun.mesh);
+}
+
+Sun = function(){
+	var sunGeom = new THREE.IcosahedronGeometry(1000, 1);
+	var mat = new THREE.MeshPhongMaterial({
+		color:0xcc5012,
+		transparent:false,
+		opacity:1,
+		vertexColors: THREE.FaceColors,
+		shading:THREE.FlatShading,
+		side: THREE.DoubleSide,
+		blending: THREE.NormalBlending,
+		//shininess: 1000
+		//specular: 0xff0000,
+		//precision: "highp",
+		//flatShading: true,
+		//depthTest:      false,
+		//combine : THREE.AddOperation
+		//emissive: 0x0000ff
+	});
+
+	this.mesh = new THREE.Mesh(sunGeom, mat);
+	this.mesh.receiveShadow = false;
+	this.mesh.castShadow = false;
+}
+
+var hemisphereLight, shadowLight;
+function createLights(){
+	hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, 0.9); // VOIR .9 ET 0.9 ?
+	//shadowLight = new THREE.DirectionalLight(0xffffff, 0.9);
+	shadowLight = new THREE.PointLight(0xffffff, 1);
+	shadowLight.shadow.bias = - 0.001;
+
+	shadowLight.position.set(0, 0, 0);
+	shadowLight.castShadow = true;
+
+	/*shadowLight.shadow.camera.left = -400;
+	shadowLight.shadow.camera.right = 400;
+	shadowLight.shadow.camera.top = 400;
+	shadowLight.shadow.camera.bottom = -400;
+	*/
+	shadowLight.shadow.camera.near = 1;
+	shadowLight.shadow.camera.far = 40000;
+
+	shadowLight.shadow.mapSize.width = 4096; // Resolution de l'ombre important !
+	shadowLight.shadow.mapSize.height = 4096;
+	//shadowLight.radius = 1 // adoucir bord ombre ?
+
+	var helper = new THREE.PointLightHelper(shadowLight, 500)
+	scene.add(helper)
+
+	scene.add(hemisphereLight);
+	scene.add(shadowLight);
+}
+
+
+var haut, bas, droite, gauche;
+var vitesseX = 0;
+var vitesseY = 0;
+document.onkeydown = function pression(e){
+	if(e.keyCode == 90){ haut 	= 	true; }
+	if(e.keyCode == 68){ droite = 	true; }
+	if(e.keyCode == 83){ bas 	= 	true; }
+	if(e.keyCode == 81){ gauche = 	true; }
+}
+document.onkeyup = function relache(e){
+	if(e.keyCode == 90){ haut 	= 	false; }
+	if(e.keyCode == 68){ droite = 	false; }
+	if(e.keyCode == 83){ bas 	=	false; }
+	if(e.keyCode == 81){ gauche = 	false; }
+}
+
+function vitesse(){
+	if(haut 	== true && vitesseY > -5)	{ vitesseY-=1.8; }
+	if(droite 	== true && vitesseX < +5)	{ vitesseX+=1.8; }
+	if(bas 		== true && vitesseY < +5)	{ vitesseY+=1.8; }
+	if(gauche 	== true && vitesseX > -5)	{ vitesseX-=1.8; }
+
+	if(-0.5 < vitesseX && vitesseX < 0.5)	{ vitesseX = 0 }
+	else {
+		if(vitesseX > 0)					{ vitesseX -= 0.5; }
+		else if(vitesseX < 0)				{ vitesseX += 0.5; }
+	}
+
+	if(-0.5 < vitesseY && vitesseY < 0.5)	{ vitesseY = 0 }
+	else {
+		if(vitesseY > 0)					{ vitesseY -= 0.5; }
+		else if(vitesseY < 0)				{ vitesseY += 0.5; }
+	}
+
+	var VectResGetWDir = new THREE.Vector3();
+	var composanteX = -(vitesseY * camera.getWorldDirection(VectResGetWDir).x)   + vitesseX * (-camera.getWorldDirection(VectResGetWDir).z)
+	var composanteY =   vitesseY * (-camera.getWorldDirection(VectResGetWDir).z) + vitesseX * camera.getWorldDirection(VectResGetWDir).x
+
+	camera.position.x += composanteX; // gauche droite   vitesseX
+	camera.position.z += composanteY; // devant derrière vitesseY 	// A noter : ici composante Y actionne l'axe Z
+	camera.position.y += -vitesseY*camera.getWorldDirection(VectResGetWDir).y
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+window.addEventListener('load', init, false); // voir l'argument false ?
+</script>
