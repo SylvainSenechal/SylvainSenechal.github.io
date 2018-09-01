@@ -124,7 +124,7 @@ const loop = () => {
 
     render()
   }
-  if(cpt>50)  uniforms.first.value = false
+  if(cpt>500)  uniforms.first.value = false
 
   requestAnimationFrame(loop)
 }
@@ -173,7 +173,7 @@ const createScene = () => {
 var first = true
 const createMesh = () => {
 
-  var textureAURL = "https://raw.githubusercontent.com/SylvainSenechal/SylvainSenechal.github.io/master/img4.png"
+  var textureAURL = "https://raw.githubusercontent.com/SylvainSenechal/SylvainSenechal.github.io/master/img6.png"
   var tex = new THREE.TextureLoader().load(textureAURL);
   // var textureBURL = "https://raw.githubusercontent.com/tutsplus/Beginners-Guide-to-Shaders/master/Part3/normal_maps/blocks_normal.JPG"
   // var texB = new THREE.TextureLoader().load(textureBURL);
