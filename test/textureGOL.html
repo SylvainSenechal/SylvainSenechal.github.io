@@ -46,8 +46,8 @@ void main() {
 // gl_FragColor = texture2D( bufferTexture, pixel );
 
   if(first){
+    gl_FragColor = texture2D(tex, pixel);
     if(random(vec2(gl_FragCoord.x, gl_FragCoord.y)) > 0.5) {
-      gl_FragColor = texture2D(tex, pixel);
     }
     // if(random(vec2(gl_FragCoord.x, gl_FragCoord.y)) > 0.9) {
     //   gl_FragColor.r += 1.;
@@ -171,20 +171,21 @@ const createScene = () => {
 // Faire une deuxième camera, perspective, render la texture sur un cube dans cette deuxieme camera
 ///////////////////////////////////////
 var first = true
+var tex
 const createMesh = () => {
 
   var textureAURL = "https://raw.githubusercontent.com/SylvainSenechal/SylvainSenechal.github.io/master/img6.png"
-  var tex = new THREE.TextureLoader().load(textureAURL);
-  tex.wrapS = THREE.ClampToEdgeWrapping
-  tex.wrapT = THREE.ClampToEdgeWrapping
+  tex = new THREE.TextureLoader().load(textureAURL);
+  tex.wrapS = THREE.RepeatWrapping
+  tex.wrapT = THREE.RepeatWrapping
+  console.log(tex)
   tex.minFilter = THREE.NearestFilter
   tex.magFilter = THREE.NearestFilter
   // var textureBURL = "https://raw.githubusercontent.com/tutsplus/Beginners-Guide-to-Shaders/master/Part3/normal_maps/blocks_normal.JPG"
   // var texB = new THREE.TextureLoader().load(textureBURL);
 
-  textureA = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter})
-  textureB = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter} )
-
+  textureA = new THREE.WebGLRenderTarget( width, height, {wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter})
+  textureB = new THREE.WebGLRenderTarget( width, height, {wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter} )
 
 
   uniforms = {
@@ -229,14 +230,14 @@ document.onmousemove = event => {
 
 // A finir
 const resizeScene = () => {
-	height = window.innerHeight
-	width = window.innerWidth
-  camera.left = -width/2
-  camera.right = width/2
-  camera.top = height/2
-  camera.bottom = -height/2
-  camera.updateProjectionMatrix()
-	renderer.setSize(width, height)
+	// height = window.innerHeight
+	// width = window.innerWidth
+  // camera.left = -width/2
+  // camera.right = width/2
+  // camera.top = height/2
+  // camera.bottom = -height/2
+  // camera.updateProjectionMatrix()
+	// renderer.setSize(width, height)
   uniforms.u_resolution.value.x = renderer.domElement.width
   uniforms.u_resolution.value.y = renderer.domElement.height
 
