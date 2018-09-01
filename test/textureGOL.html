@@ -16,9 +16,10 @@
 <script src="three.min.js"></script>
 <script id="vertexShader" type="x-shader/x-vertex">
 
-    void main() {
-        gl_Position = vec4( position, 1.0 );
-    }
+
+void main() {
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+}
 </script>
 <script id="fragmentShader" type="x-shader/x-fragment">
 #ifdef GL_ES
@@ -26,7 +27,7 @@ precision highp float;
 #endif
 
 uniform sampler2D bufferTexture;
-uniform sampler2D texInit;
+uniform sampler2D tex;
 uniform vec2 u_resolution;
 uniform float u_time;
 uniform vec2 u_mouse;
@@ -42,10 +43,15 @@ void main() {
 
   vec2 pixel = gl_FragCoord.xy / u_resolution.xy;
 
-//  gl_FragColor = texture2D( bufferTexture, pixel );
+// gl_FragColor = texture2D( bufferTexture, pixel );
 
   if(first){
-    gl_FragColor = texture2D( texInit, pixel );
+    if(random(vec2(gl_FragCoord.x, gl_FragCoord.y)) > 0.5) {
+      gl_FragColor = texture2D(tex, pixel);
+    }
+    // if(random(vec2(gl_FragCoord.x, gl_FragCoord.y)) > 0.9) {
+    //   gl_FragColor.r += 1.;
+    // }
   }
   else{
     vec4 u=vec4(0.0);
@@ -75,6 +81,23 @@ void main() {
     }
   }
 
+
+  // vec4 u=vec4(0.0);
+  //
+  // if(first){
+  //     u+=texture2D(tex,(gl_FragCoord.xy+vec2(10.0,0.0))/u_resolution.xy);
+  //     u+=texture2D(tex,(gl_FragCoord.xy+vec2( 0.0,0.0))/u_resolution.xy);
+  //
+  //   gl_FragColor = u/2.;
+  // }
+  // else{
+  //     u+=texture2D(bufferTexture,(gl_FragCoord.xy+vec2(.1,0.0))/u_resolution.xy);
+  //     u+=texture2D(bufferTexture,(gl_FragCoord.xy+vec2( 0.0,0.0))/u_resolution.xy);
+  //
+  //   gl_FragColor = u/2.;
+  // }
+
+
 }
 
 </script>
@@ -96,13 +119,13 @@ const loop = () => {
   //
   //   render()
   // }
-  // cpt++
-  render()
   cpt++
-  if(cpt>100){
+  for(let i=0; i<5; i++){
 
-    uniforms.first.value = false
+    render()
   }
+  if(cpt>50)  uniforms.first.value = false
+
   requestAnimationFrame(loop)
 }
 
@@ -155,18 +178,18 @@ const createMesh = () => {
   // var textureBURL = "https://raw.githubusercontent.com/tutsplus/Beginners-Guide-to-Shaders/master/Part3/normal_maps/blocks_normal.JPG"
   // var texB = new THREE.TextureLoader().load(textureBURL);
 
-  textureA = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, {textur: tex, minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter})
-  textureB = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, {texture: tex, minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter} )
+  textureA = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter})
+  textureB = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter} )
   //textureA.texture = tex
 
   uniforms = {
       u_time: { type: "f", value: 1.0 },
       u_resolution: { type: "v2", value: new THREE.Vector2() },
       u_mouse: { type: "v2", value: new THREE.Vector2() },
-      bufferTexture: {type:'t',value: textureA},
-      texInit: {type:'t',value: tex},
+      bufferTexture: {type:'t', value: textureA},
       mouseDown: {type: 'bool', value: mouseDown},
       first: {type: 'bool', value: first},
+      tex: {type:'t', value: tex},
   };
 
   bufferMaterial = new THREE.ShaderMaterial( {
@@ -203,16 +226,15 @@ document.onmousemove = event => {
 const resizeScene = () => {
 	height = window.innerHeight
 	width = window.innerWidth
-	camera.aspect = width / height
-	camera.updateProjectionMatrix()
+  camera.left = -width/2
+  camera.right = width/2
+  camera.top = height/2
+  camera.bottom = -height/2
+  camera.updateProjectionMatrix()
 	renderer.setSize(width, height)
   uniforms.u_resolution.value.x = renderer.domElement.width
   uniforms.u_resolution.value.y = renderer.domElement.height
 
-  textureA.width = width
-  textureA.height = height
-  textureB.width = width
-  textureB.height = height
 }
 
 window.addEventListener('load', init, false);
