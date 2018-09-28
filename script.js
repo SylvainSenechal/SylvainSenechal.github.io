@@ -1,14 +1,17 @@
 // outils pour voir si référencé
 // analytics
 
-let pj = document.getElementsByClassName('container')
+let pj = document.getElementsByClassName('oui')
 console.log(pj)
 
-// Array.from(pj).forEach(function(element){
-//   element.addEventListener('mouseover', function(e){
-//     console.log('oui')
-//   })
-// })
+Array.from(pj).forEach(function(element){
+  element.addEventListener('mouseover', function(e){
+    document.getElementById("myCanvas").setAttribute("class", "blurred")
+  })
+  element.addEventListener('mouseout', function(e){
+    document.getElementById("myCanvas").setAttribute("class", "notBlurred")
+  });
+})
 
 // Array.from(pj).forEach(function(element) {
 //   element.addEventListener('mousemove', function(e){
@@ -30,7 +33,7 @@ init = function(){
 
 loop = function(){
   render()
-
+  interpolate()
   requestAnimationFrame(loop)
 }
 
@@ -64,15 +67,17 @@ createScene = function(){
 
   container = document.getElementById( 'myContainer' )
   container.appendChild(renderer.domElement)
+  document.getElementsByTagName("canvas")[0].setAttribute("id", "myCanvas")
 }
 
 createMesh = function(){
   var geometry = new THREE.PlaneBufferGeometry(2, 2, 4, 4)
-
+  let seed = Math.random()*100
   uniforms = {
-      u_time: { type: "f", value: 1.0 },
-      u_resolution: { type: "v2", value: new THREE.Vector2() },
-      u_mouse: { type: "v2", value: new THREE.Vector2() },
+      u_time: {type: "f", value: 1.0},
+      u_resolution: {type: "v2", value: new THREE.Vector2()},
+      u_mouse: {type: "v2", value: new THREE.Vector2()},
+      seed: {type: "f", value: seed},
   };
 
   var material = new THREE.ShaderMaterial( {
@@ -85,11 +90,18 @@ createMesh = function(){
   scene.add(mesh)
 }
 
+var targetX = 0
+var targetY = 0
 document.onmousemove = function(e){
-  uniforms.u_mouse.value.x = e.x
-  uniforms.u_mouse.value.y = height - e.y
+  targetX = e.x
+  targetY = height - e.y
+  // uniforms.u_mouse.value.x = e.x
+  // uniforms.u_mouse.value.y = height - e.y
 }
-
+interpolate = function(){
+  uniforms.u_mouse.value.x += (targetX-uniforms.u_mouse.value.x) * 0.02
+  uniforms.u_mouse.value.y += (targetY-uniforms.u_mouse.value.y) * 0.02
+}
 
 resizeScene = function(){
   console.log('oui')

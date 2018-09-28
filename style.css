@@ -88,18 +88,18 @@ canvas{
   width: 100%;
   height: 100%;
   z-index: -1;
+
 }
 
+.blurred{
 
-
-/* .oui {
-  animation-name: blur;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
+    animation-name: blur;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
 }
+
 
 @keyframes blur {
   from{filter: blur(0px);}
   to {filter: blur(2px);}
-} */
+}

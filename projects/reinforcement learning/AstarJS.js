@@ -109,6 +109,7 @@ const search = () => {
     //console.log('Best length : ' + bestNode.f)
     if(bestNode.x === Terrain.sizeX-1 && bestNode.y === Terrain.sizeY-1){
       Terrain.done = true
+      console.log('fini')
     }
 
     Terrain.openList.splice(indiceBest, 1)

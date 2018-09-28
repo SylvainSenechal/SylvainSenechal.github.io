@@ -10,7 +10,6 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" type="text/css" href="style.css">
     <script type="text/javascript" src="script.js" defer></script>
-    <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124438376-1"></script>
     <script>
@@ -35,10 +34,11 @@
     uniform vec2 u_resolution;
     uniform vec2 u_mouse;
     uniform float u_time;
+    uniform float seed;
 
     float random (in vec2 st) {
         return fract(sin(dot(st.xy,
-                             vec2(12.9898,78.233)))*
+                             vec2(12.9898,78.233+seed)))*
             43758.5453123);
     }
 
@@ -73,6 +73,7 @@
         for (int i = 0; i < OCTAVES; i++) {
             value += amplitude * noise(st);
             st = m*st*2.;
+            // Commenter st pour un autre effet
             amplitude *= .5;
         }
         return value;
@@ -91,24 +92,25 @@
         vec2 r = vec2(1.0);
         vec2 m = vec2(1.0);
         vec2 n = vec2(1.0);
-        q.x = fbm(st*3.0 + vec2(0.0, 0.0) );
-        q.y =  fbm(st*3.0 + vec2(5.2, 1.3));
+        q.x = fbm(st*3.0 + vec2(0.0, 0.0));
+        q.y = fbm(st*3.0 + vec2(5.2, 1.3));
 
-        r.x = fbm(st*3.0 + q*3.0 + vec2(0.730,.210) - u_time*0.058 );
+        r.x = fbm(st*3.0 + q*3.0 + vec2(0.730,.210));
         r.y = fbm(st*3.0 + q*3.0 + vec2(9.2, .8));
 
-        // m.x = fbm(st*3.0 + r*3.0 + vec2(0.1730,.210) - u_time*0.00058);
-        // m.y = fbm(st*3.0 + r*3.0 + vec2(0.30,.210) + u_time*0.002781);
+        m.x = fbm(st*3.0 + r*3.0 + vec2(0.1730,.210) - u_time*0.0018);
+        m.y = fbm(st*3.0 + r*3.0 + vec2(0.30,.210) + u_time*0.02781);
         //
         // n.x = fbm(st*3.0 + m*3.0 + vec2(0.1730,.210) + u_time*0.0478);
         // n.y = fbm(st*3.0 + m*3.0 + vec2(0.30,.210) - u_time*0.0098);
-        float f = fbm(st*3.0 + r*3.);
+        float f = fbm(st*3.0 + m*3.);
 
-        color += fbm(st*3.0 + r*3.);
-        color = mix(color, vec3(0.783, 0.1, 0.5), 0.5);
-        //color = mix(color, vec3(0.783, 0.1, 0.5), 1.-dst);
+        color += fbm(st*3.0 + m*3.);
+        //color = mix(color, vec3(0.783, 0.1, 0.5), 0.5);
+        color = mix(color, vec3(.8, 0.1, 0.), clamp(1.-dst, -1., 1.));
 
         gl_FragColor = vec4((f*f*f+0.6*f*f+0.5*f)*color, 1.0);
+
     }
     </script>
   </head>

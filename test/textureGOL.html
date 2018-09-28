@@ -42,12 +42,12 @@ float random (in vec2 st) {
 void main() {
 
   vec2 pixel = gl_FragCoord.xy / u_resolution.xy;
-
+  vec2 pixel2 = gl_FragCoord.xy / vec2(512, 512);
 // gl_FragColor = texture2D( bufferTexture, pixel );
 
   if(first){
-    gl_FragColor = texture2D(tex, pixel);
-    if(random(vec2(gl_FragCoord.x, gl_FragCoord.y)) > 0.5) {
+    if(texture2D(tex, pixel2).r == 1.) {
+      gl_FragColor.r = 1.;
     }
     // if(random(vec2(gl_FragCoord.x, gl_FragCoord.y)) > 0.9) {
     //   gl_FragColor.r += 1.;
@@ -184,8 +184,8 @@ const createMesh = () => {
   // var textureBURL = "https://raw.githubusercontent.com/tutsplus/Beginners-Guide-to-Shaders/master/Part3/normal_maps/blocks_normal.JPG"
   // var texB = new THREE.TextureLoader().load(textureBURL);
 
-  textureA = new THREE.WebGLRenderTarget( width, height, {wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter})
-  textureB = new THREE.WebGLRenderTarget( width, height, {wrapS: THREE.RepeatWrapping, wrapT: THREE.RepeatWrapping, minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter} )
+  textureA = new THREE.WebGLRenderTarget( width, height, {minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter})
+  textureB = new THREE.WebGLRenderTarget( width, height, {minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter} )
 
 
   uniforms = {
