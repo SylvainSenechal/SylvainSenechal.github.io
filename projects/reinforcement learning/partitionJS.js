@@ -13,62 +13,43 @@ function init(){
   ctx.canvas.height = height
 	ctx.font = "40px Comic Sans MS"
 
+  initListNumber()
   initPopulation()
   loop()
 }
 
 function loop(){ // Voir l'ordre des fonctions
   //dessin()
-  for(let speed = 0; speed<1; speed++){
-    calculateFitness()
-    printData()
-    calculateProbability()
-    mateNewPopulation()
+  if(!Global.trouve){
+    for(let speed = 0; speed<1; speed++){
+      calculateFitness()
+      printData()
+      calculateProbability()
+      mateNewPopulation()
 
-    Global.nbGeneration++
+      Global.nbGeneration++
+    }
   }
+  else{
+    printBestData()
+  }
+
   requestAnimationFrame(loop);
 }
 
-// // reduction des ecarts :
-// let minFit = Math.min(...jeu.listFitness)
-// jeu.listFitness = jeu.listFitness.map(elem => elem -= minFit)
-// // On commence par mettre a la puissance 4 les fitness pour garder vraiment les meilleures
-// for(let a=0; a<jeu.listGame.length; a++){
-//   jeu.listFitness[a] = Math.pow(jeu.listFitness[a], 4)
-//   //jeu.listFitness[a] = Math.pow(1.05, jeu.listFitness[a])
-//   //console.log(jeu.listFitness[a])
-// }
-// calculateProbability()
-
 var Global = {
-  Target: 'Je suis a deviner si tu peux mais tu ne pourra pas me trouver meme en cherchant tres fort^^ eh oui je suis l introuvable qui finira peut-etre par etre trouve',
-  populationSize: 1000,
+  listNumber: [],
+  sizeListNumber: 20,
+  sumListNumber: 0,
+  populationSize: 100,
   population: [],
   nbGeneration: 1,
   maxFitness: 0,
-  mutationRate: 0.01
+  mutationRate: 0.02,
+  trouve: false,
+
+  best: null,
 }
-
-// function printData(){
-//   console.log("Played matchs : " + jeu.matchPlayed)
-//   console.log("Max won: " + Math.max(...jeu.listWon))
-//   console.log("Max lost: " + Math.max(...jeu.listLost))
-//   console.log("Max null: " + Math.max(...jeu.listNoWon))
-//   console.log("Fitness Max : " + Math.max(...jeu.listFitness))
-//   console.log('fitness min : ' + Math.min(...jeu.listFitness))
-//   let cpt = 0
-//   for(i=0; i<jeu.nbGames; i++){
-//     cpt += jeu.listFitness[i]
-//   }
-//   console.log("Fitness Avg : " + (cpt/jeu.nbGames))
-//   console.log("Total played : " + jeu.totalPlayed)
-//   console.log("% Gagnes : " + jeu.j1Won/jeu.totalPlayed*100)
-//   console.log("% Perdus : " + jeu.j2Won/jeu.totalPlayed*100)
-//   console.log("% Null : "   + jeu.noWin/jeu.totalPlayed*100)
-//   console.log("")
-// }
-
 
 function printData(){
   let maxFit = 0
@@ -79,11 +60,28 @@ function printData(){
       indexMax = i
     }
   }
-  let bestResult = ""
-  Global.population[indexMax].genes.forEach( elem => bestResult += elem)
-  console.log(bestResult)
+  Global.best = Global.population[indexMax]
+  if(Global.population[indexMax].sum1 === Global.population[indexMax].sum2) Global.trouve = true
+  console.log("Sum 1 Best : " + Global.population[indexMax].sum1)
+  console.log("Sum 2 Best : " + Global.population[indexMax].sum2)
+  console.log("Best fitness : " + Global.population[indexMax].fitness)
+}
+function printBestData(){
+  console.log("Sum 1 Best : " + Global.best.sum1)
+  console.log("Sum 2 Best : " + Global.best.sum2)
+  console.log("Best fitness : " + Global.best.fitness)
+  console.log("List number : " + Global.listNumber)
+  console.log("Genes Best : " + Global.best.genes)
 }
 
+const sum = (acc, currentSum) => acc + currentSum
+function initListNumber(){
+  for(let i=0; i<Global.sizeListNumber; i++){
+    Global.listNumber[i] = Math.floor(Math.random()*100)
+  }
+  Global.sumListNumber = Global.listNumber.reduce(sum)
+  console.log(Global.listNumber)
+}
 function initPopulation(){
   for(let i=0; i<Global.populationSize; i++){
     Global.population[i] = new DNA()
@@ -99,25 +97,14 @@ function mateNewPopulation(){
 }
 
 
-function createGenes() {
-  let genes = []
-  for(let i=0; i<Global.Target.length; i++){ // Ne pas utiliser target length mais des sizes au hasard
-                                            // avec -1 fitness par size trop longue ?
-    genes[i] = createPartOfGene()
-  }
-  return genes
-}
-function createPartOfGene() {
-  let ascii = Math.floor(Math.random()*128) //Math.floor(Math.random()*59+64) // 64 a 122
-  //if (ascii == 64) ascii = 32
-  return String.fromCharCode(ascii)
-}
 DNA = function(similarDNA){
   this.genes = []
   this.fitness = 0
   this.probability = 0
   if(arguments.length == 0){ // Initialisation tout debut
-    this.genes = createGenes()
+    for(let i=0; i<Global.sizeListNumber; i++){
+      Math.random() > 0.5 ? this.genes[i] = 1 : this.genes[i] = 0
+    }
   }
   else if(arguments.length == 1){
     // Selection de 2 parents
@@ -135,20 +122,24 @@ DNA = function(similarDNA){
     for(let i=0; i<this.genes.length; i++){
       let rd = Math.random()
       if(rd < Global.mutationRate){
-        this.genes[i] = createPartOfGene()
+        Math.random() > 0.5 ? this.genes[i] = 1 : this.genes[i] = 0
       }
     }
   }
 }
 
+var fitGrand = 1000000
 function calculateFitness() {
-  let minFit = 10000
+  let minFit = 1000000
   for(let i=0; i<Global.populationSize; i++){
-    for(let j=0; j<Global.Target.length; j++){
-      if(Global.population[i].genes[j] == Global.Target[j]){
-        Global.population[i].fitness++
-      }
+    let sum1 = 0
+    let sum2 = 0
+    for(let j=0; j<Global.listNumber.length; j++){
+      Global.population[i].genes[j] === 1 ? sum1 += Global.listNumber[j] : sum2 += Global.listNumber[j]
     }
+    Global.population[i].sum1 = sum1
+    Global.population[i].sum2 = sum2
+    Global.population[i].fitness = fitGrand - Math.abs(sum1-sum2)
     // reduction des ecarts ed fitness avec minFit:
     if(Global.population[i].fitness < minFit) minFit = Global.population[i].fitness
   }
@@ -156,7 +147,7 @@ function calculateFitness() {
 
   // On commence par mettre a la puissance 4 les fitness pour garder vraiment les meilleures
   for(let i=0; i<Global.populationSize; i++){
-    Global.population[i].fitness = Math.pow(Global.population[i].fitness, 4)
+    Global.population[i].fitness = Math.pow(Global.population[i].fitness, 2)
     //jeu.listFitness[a] = Math.pow(1.05, jeu.listFitness[a])
   }
 }
