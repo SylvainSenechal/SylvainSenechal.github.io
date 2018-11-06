@@ -71,7 +71,7 @@ class Matrix {
     }
   }
 }
-
+// Faire une classe genetic algo avec proba, pick parent etc
 class NeuralNetwork {
   constructor(nbInputs, nbHidden, nbOutput) {
     if(nbInputs instanceof NeuralNetwork){
@@ -98,12 +98,23 @@ class NeuralNetwork {
     this.hiddenWeights.mutate(mutationRate)
     this.outputWeigths.mutate(mutationRate)
   }
+
+  draw(context, inputs){
+    ctx.clearRect(0, 950, 1000, 1200)
+    ctx.font = "10px Comic Sans MS"
+    inputs.forEach( (elem, index) => ctx.strokeText(elem.toFixed(3), 50, 1000 + index*25))
+  }
 }
+// ctx.beginPath()
+// ctx.arc(bird.x + jeu.positionX, bird.y + jeu.positionX, bird.size, 0, 2*Math.PI)
+// ctx.fill()
+// ctx.strokeText("Score : " + jeu.score, 50, 40)
+
 const sigmoid = x => 1 / (1 + Math.exp(-x));
 const relu = x => x < 0 ? 0 : x
 const step = x => x < 0 ? 0 : 1
 const identity = x => x
-
+// Mettre les functions d'activations en this. du nn
 NeuralNetwork.prototype.think = function(inputs){
   let result1 = Matrix.multiply(this.hiddenWeights, inputs)
   result1.map(identity)
@@ -127,7 +138,6 @@ function init(){
   height = window.innerHeight
   ctx.canvas.width = width
   ctx.canvas.height = height
-	ctx.font = "40px Comic Sans MS"
   createBirds()
   loop()
 }
@@ -167,16 +177,17 @@ var jeu = {
 	score: 0,
   gravityPower: 0.7,
   scoreBetweenPipes : 400, // base 300
-  nbBirds: 3000,
+  nbBirds: 200,
   maxDrawnBird: 200,
   nbGeneration: 1,
-  maxFitness: 0,
   mutationRate: 0.1
 }
 
-function useBrain(bird){
+function useBrain(bird, indexBird){
   // inputs = [yBird, yTopPipe, yBottomPipe, birdSpeed] + normalize
-
+  // Sur inputs dst du pipe ajouter la largeur du pipe
+  // Voir problème du hole pipe qui retrecis et qui fausse l'inputs
+  // Retirer le hole pipe qui retrecis et faire sauter oiseau plus lentement
   let inputs = [
     (bird.y-bird.size) / (jeu.height-(2*bird.size)),
     (jeu.listePipes[0].height1) / (jeu.height*(1-jeu.holePipe)),
@@ -185,6 +196,7 @@ function useBrain(bird){
     (jeu.listePipes[0].x-bird.x) / (jeu.width) //(entre 100 et 950)->850 (oiseauX maxXpipe)
     // 1 BIAS ???
   ]
+  if(indexBird === 0) bird.brain.draw(ctx, inputs)
   inputs = Matrix.toMatrix(inputs)
   let results = bird.brain.think(inputs).data
   return results[0][0]
@@ -203,40 +215,10 @@ Bird = function(fromParent){
     this.brain = new NeuralNetwork(5, 4, 1)
   }
   else{
-    // Selection de 2 parents
+    // Selection d'un parent
     let mother = pickParent()
-    let father = pickParent()
-    // CrossOver de ces 2 parents pour  donner un fils
-
-    // for(let m=0; m<mother.brain.hiddenWeights.rows; m++){
-    //   if(Math.random()>0.5){
-    //     this.brain.hiddenWeights.data[m] = mother.brain.hiddenWeights.data[m]
-    //     this.brain.outputWeigths.data[m] = mother.brain.outputWeigths.data[m]
-    //   }
-    //   else{
-    //     this.brain.hiddenWeights.data[m] = mother.brain.hiddenWeights.data[m]
-    //     this.brain.outputWeigths.data[m] = mother.brain.outputWeigths.data[m]
-    //   }
-    // }
     this.brain = mother
     this.brain.mutate(jeu.mutationRate)
-    // Mutations potentielles du fils
-    // for(let i=0; i<this.brain.hiddenWeights.rows; i++){
-    //   for(let j=0; j<this.brain.hiddenWeights.cols; j++){
-    //     let rd = Math.random()
-    //     if(rd < jeu.mutationRate){
-    //       this.brain.hiddenWeights.data[i][j] = (-1 + Math.random()*2)
-    //     }
-    //   }
-    // }
-    // for(let i=0; i<this.brain.outputWeigths.rows; i++){
-    //   for(let j=0; j<this.brain.outputWeigths.cols; j++){
-    //     let rd = Math.random()
-    //     if(rd < jeu.mutationRate){
-    //       this.brain.outputWeigths.data[i][j] = (-1 + Math.random()*2)
-    //     }
-    //   }
-    // }
   }
 }
 
@@ -366,14 +348,14 @@ function collisions(){
 }
 
 function gravity(){
-  for(bird of jeu.listeBird){
+  jeu.listeBird.forEach((bird, indexBird) => {
     bird.birdVertSpeed += jeu.gravityPower
   	if(bird.birdVertSpeed > 15){
   		bird.birdVertSpeed = 15
   	}
 
     if(jeu.listePipes.length>=1){ // on a besoin d'un pipe à prendre en entrée pour useBrain
-      if(useBrain(bird) >= 0.0){
+      if(useBrain(bird, indexBird) >= 0.0){
     		if(bird.birdVertSpeed > 0){
     			bird.birdVertSpeed = 0
     		}
@@ -399,14 +381,12 @@ function gravity(){
   	else if(bird.y < bird.size){
   		bird.y = bird.size
   	}
-  }
+  })
 }
 
-
-
 function dessin(){
-	ctx.clearRect(0, 0, canvas.width, canvas.height)
-
+	// ctx.clearRect(0, 0, canvas.width, canvas.height)
+  ctx.clearRect(0, 0, jeu.width+200, jeu.height+jeu.positionY+1)
 	ctx.fillStyle = "#83f442"
 	for (p of jeu.listePipes) {
 		ctx.fillRect(p.x + jeu.positionX, p.y1 + jeu.positionY, p.width, p.height1) // top pipe
@@ -430,10 +410,9 @@ function dessin(){
     }
   }
 
-
+  ctx.font = "40px Comic Sans MS"
 	ctx.strokeText("Score : " + jeu.score, 50, 40)
   ctx.strokeText("Generation : " + jeu.nbGeneration, 350, 40)
-  ctx.strokeText("Max fitness : " + jeu.maxFitness, 700, 40)
 	ctx.strokeRect(jeu.positionX, jeu.positionY, jeu.width, jeu.height); // Cadre noir du jeu
 }
 
