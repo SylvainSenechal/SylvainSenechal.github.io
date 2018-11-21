@@ -44,8 +44,8 @@ body {
   grid-template-columns: repeat(9, 1fr);
   grid-template-rows: 100px 300px 100px;
   grid-template-areas: ' header header header header header header header header header '
-                      ' . . contenu contenu contenu contenu contenu . . '
-                      ' footer footer footer footer footer footer footer footer footer ';
+                       ' .      . contenu contenu contenu contenu contenu .      .      '
+                       ' footer footer footer footer footer footer footer footer footer ';
   justify-items: center;
   align-items: center;
   justify-content: start;
@@ -79,10 +79,29 @@ body {
   grid-area: footer;
 }
 
-.oui {
-  /* color: #ffffff; */
-  font-size: 150%;
+.projectLink:link, .projectLink:visited {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: black;
+  /* border: 2px solid green; */
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
 }
+.projectLink:active, .projectLink:hover {
+  background-color: green;
+  color: white;
+}
+
+.focused:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: black;
+  /* border: 2px solid green; */
+  padding: 100px 200px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;}
+
 canvas{
   position: fixed;
   width: 100%;

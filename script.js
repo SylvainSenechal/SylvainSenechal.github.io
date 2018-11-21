@@ -1,15 +1,26 @@
 // outils pour voir si référencé
 // analytics
 
-let pj = document.getElementsByClassName('oui')
+let pj = document.getElementsByClassName('projectLink')
 console.log(pj)
 
 Array.from(pj).forEach(function(element){
   element.addEventListener('mouseover', function(e){
     document.getElementById("myCanvas").setAttribute("class", "blurred")
+    Array.from(document.getElementsByClassName("projectLink")).forEach( elem => {
+      if(elem != element){
+        elem.setAttribute("class", "projectLink blurred")
+      }
+      else{
+        elem.setAttribute("class", "projectLink focused")
+
+      }
+    })
+    // Rajouter un zoom qui centralise sur la page, avec une description detaillee du projet
   })
   element.addEventListener('mouseout', function(e){
     document.getElementById("myCanvas").setAttribute("class", "notBlurred")
+    Array.from(document.getElementsByClassName("projectLink")).forEach( elem => elem.setAttribute("class", "projectLink notBlurred"))
   });
 })
 
