@@ -83,7 +83,7 @@ async function train(){
   return await model.fit(xs, ys, options)
 }
 
-const url = 'https://sylvainsenechal.github.io/projects/tensorFlowV2/dataMnist.json';
+const url = 'https://sylvainsenechal.github.io/projects/tensorflowV2/dataMnist.json';
 fetch(url)
 	.then(response => {
     return response.json();
