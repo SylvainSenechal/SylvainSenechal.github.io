@@ -1,0 +1,52 @@
+<h1>Authors</h1>
+<ul id="authors"></ul>
+<script>
+const ul = document.getElementById('authors'); // Get the list where we will place our authors
+const url = 'https://sylvainsenechal.github.io/projects/tensorFlow/dataMnistSaved.json'; // Get 10 random users
+
+
+fetch(url)
+	.then(function (response) {
+		return response//.json();
+	})
+	.then(function (data) {
+		console.log(data);
+	});
+
+
+
+
+// function hitApi(url, callback) {
+//   var req = new XMLHttpRequest();
+//
+//   req.addEventListener('load', onLoad);
+//   req.addEventListener('error', onFail);
+//   req.addEventListener('abort', onFail);
+//
+//   req.open('GET', url);
+//   req.send();
+//
+//   function onLoad(event) {
+//     if (req.status >= 400) {
+//       onFail(event);
+//     } else {
+//       // var json = JSON.parse(this.responseText);
+//       callback(null, this.responseText);
+//     }
+//   }
+//
+//   function onFail(event) {
+//     callback(new Error('...'));
+//   }
+// }
+//
+//
+// hitApi(url, function(error, data) {
+//   if (error) {
+//     console.log('there was an error', error);
+//   } else {
+//     console.log('data is', data);
+//   }
+// });
+
+</script>
