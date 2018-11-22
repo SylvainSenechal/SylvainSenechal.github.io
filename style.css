@@ -2,40 +2,6 @@
 body {
   margin: 0px;
 }
-/*
-.header {
-  grid-area: hd;
-}
-.footer {
-  grid-area: ft;
-}
-.listProjects {
-  grid-area: main;
-}
-
-.container {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  grid-auto-rows: 100px 300px 100px;
-  grid-template-areas:
-    "hd hd hd hd hd hd hd hd hd"
-    ". . main main main main main main ."
-    ". ft ft ft ft ft ft ft ft";
-}
-
-.container {
-  border: 2px solid #f76707;
-  border-radius: 5px;
-  background-color: #fff4e6;
-}
-
-.container > * {
-  border: 2px solid #ffa94d;
-  border-radius: 5px;
-  background-color: #ffd8a8;
-  padding: 1em;
-  color: #d9480f;
-} */
 
 .container {
   display: grid;
@@ -69,9 +35,14 @@ body {
 }
 .listProjects{
   grid-area: contenu;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   justify-self: center;
   height: 100%;
-  width: 100%
+  width: 100%;
+  /* width: 100px  a voir */
+
 
 }
 
@@ -82,27 +53,20 @@ body {
 .projectLink:link, .projectLink:visited {
   background-color: rgba(255, 255, 255, 0.5);
   color: black;
-  /* border: 2px solid green; */
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-}
-.projectLink:active, .projectLink:hover {
-  background-color: green;
-  color: white;
+  font-family: "Lucida Console";
+  transition: 1s;
 }
 
-.focused:hover {
+.projectLink:hover {
   background-color: rgba(255, 255, 255, 0.5);
-  color: black;
-  /* border: 2px solid green; */
-  padding: 100px 200px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;}
+  padding: 100px 100px;
+}
 
-canvas{
+#myCanvas{
   position: fixed;
   width: 100%;
   height: 100%;
@@ -110,15 +74,14 @@ canvas{
 
 }
 
+
 .blurred{
-
     animation-name: blur;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
 }
-
 
 @keyframes blur {
   from{filter: blur(0px);}
-  to {filter: blur(2px);}
+  to {filter: blur(4px);}
 }
