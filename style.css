@@ -1,14 +1,12 @@
-/* voir css barré dans chrome */
 body {
-  margin: 0px;
+  margin: 0;
 }
 
 .container {
   display: grid;
-  position: relative;
-  grid-gap: 35px;
+  /* position: relative; */
   grid-template-columns: repeat(9, 1fr);
-  grid-template-rows: 100px 300px 100px;
+  grid-template-rows: 10vh 80vh 10vh;
   grid-template-areas: ' header header header header header header header header header '
                        ' .      . contenu contenu contenu contenu contenu .      .      '
                        ' footer footer footer footer footer footer footer footer footer ';
@@ -23,9 +21,6 @@ body {
 .container > * {
   border: 2px solid #ffa94d;
   border-radius: 5px;
-  /* background-color: #ffd8a8; */
-  /* padding: 1em; */
-  /* color: #d9480f; */
 }
 
 /* prendre taille du parent */
@@ -39,11 +34,8 @@ body {
   flex-direction: column;
   justify-content: space-between;
   justify-self: center;
-  height: 100%;
-  width: 100%;
-  /* width: 100px  a voir */
-
-
+  /* height: 100%;
+  width: 100%; */
 }
 
 .footer{

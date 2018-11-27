@@ -101,8 +101,6 @@ var targetY = 0
 document.onmousemove = function(e){
   targetX = e.x
   targetY = height - e.y
-  // uniforms.u_mouse.value.x = e.x
-  // uniforms.u_mouse.value.y = height - e.y
 }
 interpolate = function(){
   uniforms.u_mouse.value.x += (targetX-uniforms.u_mouse.value.x) * 0.02
