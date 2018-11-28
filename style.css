@@ -1,9 +1,9 @@
 body {
   margin: 0;
 }
-* {
-    box-sizing: border-box;
-}
+
+* {box-sizing: border-box;}
+
 .container {
   display: grid;
   width: 100vw;
@@ -16,22 +16,15 @@ body {
                        ' .      . contenu contenu contenu contenu contenu .      .      '
                        ' footer footer footer footer footer footer footer footer footer ';
 
-  justify-items: center;
+  /* justify-items: center; */
+  justify-content: center;
   align-items: center;
-
-  /* background-color: rgba(255, 0, 0, 0.3); */
-  border: 20px solid #f76707;
-  border-radius: 5px;
-}
-
-.container > * {
-  border: 2px solid #ffa94d;
-  border-radius: 5px;
 }
 
 .header{
   grid-area: header;
 }
+
 .container > .listProjects{
   grid-area: contenu;
   display: flex;
@@ -49,11 +42,30 @@ body {
   text-align: center;
   text-decoration: none;
   font-family: "Lucida Console";
-  transition: 1s;
+  transition: padding 1s;
 }
 
+@@keyframes cacher {
+  from{
+    display: none;
+  }
+  to{
+    display: block;
+  }
+}
 .projectLink:hover {
   padding: 100px 100px;
+}
+
+.projectLink:hover > div {
+  /* transition-delay: 2s;
+  display: block; */
+  animation: cacher 2s;
+
+}
+
+.descriptionProject {
+  display: none;
 }
 
 #myCanvas{
@@ -62,7 +74,6 @@ body {
   height: 100%;
   z-index: -1;
 }
-
 
 .blurred{
   animation-name: blur;

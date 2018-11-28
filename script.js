@@ -3,15 +3,16 @@ let pj = document.getElementsByClassName('projectLink')
 Array.from(pj).forEach(function(element){
   element.addEventListener('mouseover', function(e){
     document.getElementById("myCanvas").setAttribute("class", "blurred")
-    // Array.from(document.getElementsByClassName("projectLink")).forEach( elem => {
-    //   if(elem != element){
-    //     elem.setAttribute("class", "projectLink blurred")
-    //   }
-    //   else{
-    //     elem.setAttribute("class", "projectLink focused")
-    //
-    //   }
-    // })
+    Array.from(document.getElementsByClassName("projectLink")).forEach( elem => {
+      if(elem != element){
+        elem.setAttribute("class", "projectLink blurred")
+
+      }
+      else{
+        elem.setAttribute("class", "projectLink")
+
+      }
+    })
   })
   element.addEventListener('mouseout', function(e){
     document.getElementById("myCanvas").setAttribute("class", "notBlurred")
