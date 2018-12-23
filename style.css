@@ -17,23 +17,30 @@ body {
                        ' footer footer footer footer footer footer footer footer footer ';
 
   /* justify-items: center; */
-  justify-content: center;
-  align-items: center;
+
+  /* justify-content: center;
+  align-items: center; */
 }
 
 .header{
   grid-area: header;
 }
 
+/* justify : principal
+align : secondaire */
+
 .container > .listProjects{
   grid-area: contenu;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
 }
 
 .footer{
   grid-area: footer;
 }
+
 
 .projectLink:link, .projectLink:visited {
   background-color: rgba(255, 255, 255, 0.5);
