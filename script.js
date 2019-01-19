@@ -77,7 +77,7 @@ const createScene = function(){
   container.appendChild(renderer.domElement)
   document.getElementsByTagName("canvas")[0].setAttribute("id", "myCanvas")
 }
-import vertParticles from '/fbm.vert'
+import vertParticles from './fbm.vert'
 const createMesh = function(){
   var geometry = new THREE.PlaneBufferGeometry(2, 2, 4, 4)
   let seed = Math.random()*100
