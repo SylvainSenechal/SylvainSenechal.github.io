@@ -1,6 +1,6 @@
 'use strict';
 
-import vertParticles from './mod/fbm.vert'
+// import vertParticles from './mod/fbm.vert'
 
 
 let pj = document.getElementsByClassName('projectLink')
@@ -94,7 +94,7 @@ const createMesh = function(){
 
   var material = new THREE.ShaderMaterial( {
       uniforms: uniforms,
-      vertexShader: vertParticles,//document.getElementById( 'vertexShader' ).textContent,
+      vertexShader: document.getElementById( 'vertexShader' ).textContent,
       fragmentShader: document.getElementById( 'fragmentShader' ).textContent
   } );
 
