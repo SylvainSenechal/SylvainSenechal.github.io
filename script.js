@@ -76,7 +76,7 @@ createScene = function(){
   container.appendChild(renderer.domElement)
   document.getElementsByTagName("canvas")[0].setAttribute("id", "myCanvas")
 }
-
+import vertParticles from 'fbm.vert'
 createMesh = function(){
   var geometry = new THREE.PlaneBufferGeometry(2, 2, 4, 4)
   let seed = Math.random()*100
@@ -84,6 +84,7 @@ createMesh = function(){
       u_time: {type: "f", value: 1.0},
       u_resolution: {type: "v2", value: new THREE.Vector2()},
       u_mouse: {type: "v2", value: new THREE.Vector2()},
+      u_octave: {type: "f", value: 6.0},
       seed: {type: "f", value: seed},
   };
 
@@ -102,6 +103,9 @@ var targetY = 0
 document.onmousemove = function(e){
   targetX = e.x
   targetY = height - e.y
+  let normalized = (15-2) * (e.x / width) + 2
+  console.log(Math.floor(normalized))
+  uniforms.u_octave.value = Math.floor(normalized)
 }
 interpolate = function(){
   uniforms.u_mouse.value.x += (targetX-uniforms.u_mouse.value.x) * 0.02

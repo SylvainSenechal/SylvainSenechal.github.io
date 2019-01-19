@@ -9,7 +9,7 @@
 
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script type="text/javascript" src="script.js" defer></script>
+    <script type="module" src="script.js" defer></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124438376-1"></script>
     <script>
@@ -34,6 +34,7 @@
     uniform vec2 u_resolution;
     uniform vec2 u_mouse;
     uniform float u_time;
+    uniform float u_octave;
     uniform float seed;
 
     float random (in vec2 st) {
@@ -61,7 +62,7 @@
                 (d - b) * u.x * u.y;
     }
 
-    #define OCTAVES 6
+    // #define OCTAVES 6
     float fbm (in vec2 st) {
         // Initial values
         float value = 0.0;
@@ -70,7 +71,11 @@
         //
         // Loop of octaves
         const mat2 m = mat2( 0.80,  0.60, -0.60,  0.80 );
-        for (int i = 0; i < OCTAVES; i++) {
+
+        for (int i = 0; i < 100; i++) {
+            if(i == int(u_octave)){
+              break;
+            }
             value += amplitude * noise(st);
             st = m*st*2.;
             // Commenter st pour un autre effet

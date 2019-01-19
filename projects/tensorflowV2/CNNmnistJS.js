@@ -131,6 +131,7 @@ fetch(url)
     //b.print()
     xs = b//tf.tensor2d(inputs)
     ys = tf.oneHot(labelsTensor, 10)
+    console.log(ys.shape)
 
     // let i = tf.zeros([2,4,4,1]);
     // i.print()
