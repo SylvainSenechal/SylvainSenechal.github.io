@@ -1,3 +1,4 @@
+'use strict';
 let pj = document.getElementsByClassName('projectLink')
 
 Array.from(pj).forEach(function(element){
@@ -30,7 +31,7 @@ Array.from(pj).forEach(function(element){
 var uniforms
 var scene, camera, fieldOfView, aspectRatio, height, width, nearPlane, farPlane, renderer, container
 
-init = function(){
+const init = function(){
   createScene()
   //createLights() // A ajouter
   createMesh()
@@ -38,18 +39,18 @@ init = function(){
   loop()
 }
 
-loop = function(){
+const loop = function(){
   render()
   interpolate()
   requestAnimationFrame(loop)
 }
 
-render = function(){
+const render = function(){
   uniforms.u_time.value += 60/1000
   renderer.render( scene, camera )
 }
 
-createScene = function(){
+const createScene = function(){
   scene = new THREE.Scene()
 
   aspectRatio = width / height
@@ -77,7 +78,7 @@ createScene = function(){
   document.getElementsByTagName("canvas")[0].setAttribute("id", "myCanvas")
 }
 import vertParticles from 'fbm.vert'
-createMesh = function(){
+const createMesh = function(){
   var geometry = new THREE.PlaneBufferGeometry(2, 2, 4, 4)
   let seed = Math.random()*100
   uniforms = {
@@ -90,7 +91,7 @@ createMesh = function(){
 
   var material = new THREE.ShaderMaterial( {
       uniforms: uniforms,
-      vertexShader: document.getElementById( 'vertexShader' ).textContent,
+      vertexShader: vertParticles,//document.getElementById( 'vertexShader' ).textContent,
       fragmentShader: document.getElementById( 'fragmentShader' ).textContent
   } );
 
@@ -107,12 +108,12 @@ document.onmousemove = function(e){
   console.log(Math.floor(normalized))
   uniforms.u_octave.value = Math.floor(normalized)
 }
-interpolate = function(){
+const interpolate = function(){
   uniforms.u_mouse.value.x += (targetX-uniforms.u_mouse.value.x) * 0.02
   uniforms.u_mouse.value.y += (targetY-uniforms.u_mouse.value.y) * 0.02
 }
 
-resizeScene = function(){
+const resizeScene = function(){
   console.log('oui')
 	height = window.innerHeight
 	width = window.innerWidth
