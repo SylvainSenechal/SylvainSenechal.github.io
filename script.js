@@ -1,7 +1,9 @@
 'use strict';
+// browser-sync start --server -f -w
 
-// import vertParticles from './mod/fbm.vert'
-
+import vertParticles from './mod/fbm.vert'
+import {dst} from './mod/distance.js'
+console.log(dst(5,3))
 
 let pj = document.getElementsByClassName('projectLink')
 
@@ -53,7 +55,7 @@ const render = function(){
   uniforms.u_time.value += 60/1000
   renderer.render( scene, camera )
 }
-
+console.log("bonjour")
 const createScene = function(){
   scene = new THREE.Scene()
 
