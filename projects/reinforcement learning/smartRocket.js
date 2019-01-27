@@ -1,7 +1,7 @@
-// "use strict"
+"use strict"
 
 var ctx, canvas
-var width = 600, height = 500
+var width = 1200, height = 900
 
 const init = () => {
   canvas = document.getElementById('mon_canvas')
@@ -20,6 +20,7 @@ var program
 const loop = () => {
   program.movePopulation()
   program.acceleratePopulation()
+  program.applyGenesPopulation()
   program.removeOutsideRockets()
   program.updateClock()
 
@@ -32,9 +33,13 @@ class Program {
     this.clock = 0
     this.geneClockRatio = 1
 
-    this.populationSize = 10
+    this.populationSize = 100
     this.listRockets = []
     this.initPopulation()
+
+    this.maxSpeed = 1
+    this.maxAcceleration = 0.1
+    this.mutationRate = 0.01
   }
 
   initPopulation() {
@@ -43,11 +48,42 @@ class Program {
     }
   }
 
+  breedNewPopulation() {
+    this.clock = 0
+    this.listRockets.forEach( rocket => rocket.calculateFitness() )
+    console.log("New generation")
+
+    let minFit = 10000
+    this.listRockets.forEach( rocket => {
+      if (rocket.fitness < minFit) minFit = rocket.fitness
+    })
+    // Augmenter l'importance des écarts
+    this.listRockets.forEach( rocket => rocket.fitness -= minFit )
+    // idem
+    this.listRockets.forEach( rocket => rocket.fitness = Math.pow(rocket.fitness, 2) )
+
+    this.calculatePopulationProbability()
+    let tmpRockets = []
+    for (let i = 0; i < this.populationSize; i++) {
+      tmpRockets.push(new Rocket("similarDNA"))
+    }
+    this.listRockets = tmpRockets
+  }
+
+  calculatePopulationProbability() {
+    let sum = 0
+    this.listRockets.forEach( rocket => sum += rocket.fitness )
+    this.listRockets.forEach( rocket => rocket.probability = rocket.fitness / sum )
+  }
+
   movePopulation() {
     this.listRockets.forEach( rocket => rocket.move() )
   }
   acceleratePopulation() {
     this.listRockets.forEach( rocket => rocket.accelerate() )
+  }
+  applyGenesPopulation() {
+    this.listRockets.forEach( rocket => rocket.applyGenes() )
   }
 
   removeOutsideRockets() {
@@ -60,16 +96,31 @@ class Program {
 
   updateClock() {
     this.clock++
+    if(this.clock === DNA.sizeGenes * this.geneClockRatio ) {
+      this.breedNewPopulation()
+    }
   }
 }
 
 class Rocket {
-  constructor() {
-    this.pos = {x: 0, y: 0}
-    this.speed = {x: Math.random(), y: Math.random()}
+  constructor(similarDNA) {
+    this.pos = {x: width/2, y: height/2}
+    this.speed = {x: 0, y: 0}
     this.acceleration = {x: 0, y: 0}
 
-    this.DNA = new DNA()
+    this.fitness = 0
+    this.probability = 0
+    if (arguments.length === 0) {
+      this.DNA = new DNA()
+    }
+    else {
+      this.DNA = new DNA("similarDNA")
+    }
+  }
+
+  calculateFitness() {
+    // 10000 - car bonne fitness => petite distance, pour avoir fitness croissante en fonction de la distance decroissante
+    this.fitness = 10000 - Math.sqrt( (this.pos.x - 1200)*(this.pos.x - 1200) + (this.pos.y - 450)*(this.pos.y - 450) )
   }
 
   move() {
@@ -80,11 +131,19 @@ class Rocket {
   accelerate() {
     this.speed.x += this.acceleration.x
     this.speed.y += this.acceleration.y
+    // // Keep between -1 and 1
+    // this.speed.x = Math.min(program.maxSpeed, Math.max(this.speed.x, -program.maxSpeed))
+    // this.speed.y = Math.min(program.maxSpeed, Math.max(this.speed.y, -program.maxSpeed))
   }
 
   // add gravity
   applyGenes() {
-
+    let indexGenes = Math.floor(program.clock / program.geneClockRatio)
+    this.acceleration.x += this.DNA.genes[indexGenes].x
+    this.acceleration.y += this.DNA.genes[indexGenes].y
+    // Keep between -1 and 1
+    this.acceleration.x = Math.min(program.maxAcceleration, Math.max(this.acceleration.x, -program.maxAcceleration))
+    this.acceleration.y = Math.min(program.maxAcceleration, Math.max(this.acceleration.y, -program.maxAcceleration))
   }
 
   checkOutside() {
@@ -94,117 +153,55 @@ class Rocket {
 }
 
 class DNA {
-  constructor() {
+  constructor(similarDNA) {
     this.genes = []
-    this.sizeGenes = 200
-    this.initGenes()
-  }
-
-  initGenes() {
-    for (let i = 0; i < this.sizeGenes; i++) {
-      this.genes[i] = {x: -1 + 2*Math.random(), y: -1 + 2* Math.random()}
+    if (arguments.length === 0) {
+      this.initGenes()
+    }
+    else {
+      this.genesFromParent()
     }
   }
-}
-//
-// DNA = function(similarDNA){
-//   this.genes = []
-//   this.fitness = 0
-//   this.probability = 0
-//   if(arguments.length == 0){ // Initialisation tout debut
-//     this.genes = createGenes()
-//   }
-//   else if(arguments.length == 1){
-//     // Selection de 2 parents
-//     let mother = pickParent()
-//     let father = pickParent()
-//     // CrossOver de ces 2 parents pour  donner un fils
-//     let randomCross = Math.floor(Math.random()*mother.genes.length)
-//     for(let m=0; m<randomCross; m++){
-//       this.genes[m] = mother.genes[m]
-//     }
-//     for(let n=randomCross; n<mother.genes.length; n++){
-//       this.genes[n] = father.genes[n]
-//     }
-//     // Mutations potentielles du fils
-//     for(let i=0; i<this.genes.length; i++){
-//       let rd = Math.random()
-//       if(rd < Global.mutationRate){
-//         this.genes[i] = createPartOfGene()
-//       }
-//     }
-//   }
-// }
-
-
-function mateNewPopulation(){
-  let tmp =[]
-  for(let i=0; i<Global.populationSize; i++){
-    tmp[i] = new DNA('similarDNA')
+  static get sizeGenes() {
+    return 200
   }
-  Global.population = tmp
-}
-
-
-function createGenes() {
-  let genes = []
-  for(let i=0; i<Global.Target.length; i++){ // Ne pas utiliser target length mais des sizes au hasard
-                                            // avec -1 fitness par size trop longue ?
-    genes[i] = createPartOfGene()
+  initGenes() {
+    for (let i = 0; i < DNA.sizeGenes; i++) {
+      this.genes[i] = {x: -0.1 + 0.2*Math.random(), y: -0.1 + 0.2* Math.random()}
+    }
   }
-  return genes
-}
-function createPartOfGene() {
-  let ascii = Math.floor(Math.random()*128) //Math.floor(Math.random()*59+64) // 64 a 122
-  //if (ascii == 64) ascii = 32
-  return String.fromCharCode(ascii)
-}
-
-
-function calculateFitness() {
-  let minFit = 10000
-  for(let i=0; i<Global.populationSize; i++){
-    for(let j=0; j<Global.Target.length; j++){
-      if(Global.population[i].genes[j] == Global.Target[j]){
-        Global.population[i].fitness++
+  genesFromParent() {
+    // Selection de 2 parents
+    let mother = this.pickParent()
+    let father = this.pickParent()
+    // CrossOver de ces 2 parents pour  donner un fils
+    let randomCross = Math.floor(Math.random()*mother.genes.length)
+    for (let m = 0; m < randomCross; m++) {
+      this.genes[m] = mother.genes[m]
+    }
+    for (let n = randomCross; n < mother.genes.length; n++){
+      this.genes[n] = father.genes[n]
+    }
+    // Mutations potentielles du fils
+    for(let i=0; i<this.genes.length; i++){
+      let rd = Math.random()
+      if (rd < program.mutationRate){
+        this.genes[i] = {x: -0.1 + 0.2*Math.random(), y: -0.1 + 0.2* Math.random()}
       }
     }
-    // reduction des ecarts ed fitness avec minFit:
-    if(Global.population[i].fitness < minFit) minFit = Global.population[i].fitness
   }
-  Global.population.forEach(elem => elem.fitness -= minFit)
 
-  // On commence par mettre a la puissance 4 les fitness pour garder vraiment les meilleures
-  for(let i=0; i<Global.populationSize; i++){
-    Global.population[i].fitness = Math.pow(Global.population[i].fitness, 4)
-    //jeu.listFitness[a] = Math.pow(1.05, jeu.listFitness[a])
-  }
-}
-
-function calculateProbability(){
-  let sum = 0
-  for(let i=0; i<Global.populationSize; i++){
-    sum += Global.population[i].fitness
-  }
-  for(let i=0; i<Global.populationSize; i++){
-    Global.population[i].probability = Global.population[i].fitness / sum
+  pickParent() {
+    let index = 0
+    let rdm = Math.random()
+    while (rdm > 0) {
+      rdm = rdm - program.listRockets[index].probability
+      index++
+    }
+    index--
+    return program.listRockets[index].DNA
   }
 }
-
-function pickParent(){
-  let index = 0
-  let rdm = Math.random()
-  while( rdm > 0){
-    rdm = rdm - Global.population[index].probability
-    index++
-  }
-  index--
-  return Global.population[index]
-}
-
-
-
-
 
 const dessin = () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
