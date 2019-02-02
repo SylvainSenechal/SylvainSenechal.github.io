@@ -12,20 +12,38 @@ const init = () => {
   ctx.canvas.height = height
 	ctx.font = "40px Comic Sans MS"
 
+  rocketTargets = new RocketTarget()
   program = new Program()
+  console.log(rocketTargets)
   console.log(program)
   loop()
 }
-var program
+var program, rocketTargets
 const loop = () => {
   program.movePopulation()
   program.acceleratePopulation()
   program.applyGenesPopulation()
   program.removeOutsideRockets()
+
+
   program.updateClock()
 
   dessin()
   requestAnimationFrame(loop);
+}
+
+class RocketTarget {
+  constructor() {
+    this.nbTargets = 5
+    this.targets = []
+    this.initRocketTargets()
+  }
+
+  initRocketTargets() {
+    for (let i = 0; i < this.nbTargets; i++){
+      this.targets.push( {x: Math.floor( Math.random()*width ),y: Math.floor( Math.random()*height )})
+    }
+  }
 }
 
 class Program {
@@ -107,6 +125,9 @@ class Rocket {
     this.pos = {x: width/2, y: height/2}
     this.speed = {x: 0, y: 0}
     this.acceleration = {x: 0, y: 0}
+    this.targets = []
+    this.initTargets()
+    console.log(this.targets)
 
     this.fitness = 0
     this.probability = 0
@@ -117,7 +138,11 @@ class Rocket {
       this.DNA = new DNA("similarDNA")
     }
   }
-
+  initTargets() {
+    for (let i = 0; i < rocketTargets.nbTargets; i++) {
+      this.targets[i] = {touchedOrder: 0, x: rocketTargets.targets[i].x, y: rocketTargets.targets[i].y}
+    }
+  }
   calculateFitness() {
     // 10000 - car bonne fitness => petite distance, pour avoir fitness croissante en fonction de la distance decroissante
     this.fitness = 10000 - Math.sqrt( (this.pos.x - 1200)*(this.pos.x - 1200) + (this.pos.y - 450)*(this.pos.y - 450) )
@@ -207,6 +232,19 @@ const dessin = () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctx.strokeRect(0, 0, canvas.width, canvas.height)
   program.listRockets.forEach( rocket => ctx.strokeRect(rocket.pos.x, rocket.pos.y, 5, 10) )
+
+  ctx.fillStyle = "#ff0000"
+  rocketTargets.targets.forEach( target => {
+    ctx.beginPath();
+    ctx.arc(target.x, target.y, 5, 0, 2 * Math.PI);
+    ctx.fill();
+  })
+  ctx.beginPath();
+  ctx.moveTo(width/2, height/2)
+  rocketTargets.targets.forEach( target => {
+    ctx.lineTo(target.x, target.y);
+  })
+  ctx.stroke()
 }
 
 window.addEventListener('load', init);
