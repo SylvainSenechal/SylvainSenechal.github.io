@@ -6,8 +6,6 @@ var width = 1200, height = 900
 const init = () => {
   canvas = document.getElementById('mon_canvas')
   ctx = canvas.getContext('2d')
-  // width = window.innerWidth
-  // height = window.innerHeight
   ctx.canvas.width = width
   ctx.canvas.height = height
 	ctx.font = "40px Comic Sans MS"
@@ -16,10 +14,7 @@ const init = () => {
   program = new Program()
   console.log(rocketTargets)
   console.log(program)
-  // let a = new Rocket()
-  // a.targets[4].touchedOrder = 2
-  // console.log(a)
-  // console.log(a.checkWrongTargetOrder())
+
   loop()
 }
 var program, rocketTargets
@@ -27,8 +22,7 @@ const loop = () => {
   program.movePopulation()
   program.acceleratePopulation()
   program.applyGenesPopulation()
-  program.removeOutsideRockets()
-  program.checkTouchedTargetPopulation()
+  // program.removeOutsideRockets()
 
   program.updateClock()
 
@@ -45,7 +39,7 @@ class RocketTarget {
 
   initRocketTargets() {
     for (let i = 0; i < this.nbTargets; i++){
-      this.targets.push( {x: Math.floor( Math.random()*width ),y: Math.floor( Math.random()*height )})
+      this.targets.push( {x: Math.floor( Math.random()*width ), y: Math.floor( Math.random()*height )})
     }
   }
 }
@@ -115,9 +109,6 @@ class Program {
       }
     })
   }
-  checkTouchedTargetPopulation() {
-    this.listRockets.forEach( rocket => rocket.checkTouchedTarget() )
-  }
 
   updateClock() {
     this.clock++
@@ -132,9 +123,8 @@ class Rocket {
     this.pos = {x: width/2, y: height/2}
     this.speed = {x: 0, y: 0}
     this.acceleration = {x: 0, y: 0}
-    this.targets = []
-    this.initTargets()
-    this.nbTouched = 1
+    this.positions = []
+    this.initPositions()
 
     this.fitness = 0
     this.probability = 0
@@ -145,59 +135,30 @@ class Rocket {
       this.DNA = new DNA("similarDNA")
     }
   }
-  initTargets() {
-    for (let i = 0; i < rocketTargets.nbTargets; i++) {
-      this.targets[i] = {touchedOrder: 0, x: rocketTargets.targets[i].x, y: rocketTargets.targets[i].y}
-    }
-  }
-  checkTouchedTarget() {
-    this.targets.forEach( (target, index) => {
-      if ( dst(target.x, target.y, this.pos.x, this.pos.y) < 20 ) {
-        if (this.targets[index].touchedOrder === 0) { // Necessaire car le rocket touche plusieurs fois la cible avant de s en eloigner
-          this.targets[index].touchedOrder = this.nbTouched
-          this.nbTouched++
-          console.log('touche')
-          // console.log(this.targets)
-        }
-      }
-    })
-  }
+
   calculateFitness() {
     // 10000 - car bonne fitness => petite distance, pour avoir fitness croissante en fonction de la distance decroissante
-    // this.fitness = 10000 - Math.sqrt( (this.pos.x - 1200)*(this.pos.x - 1200) + (this.pos.y - 900)*(this.pos.y - 900) )
     this.fitness = 10000
-    if (this.checkWrongTargetOrder()) {
-      this.fitness = 0
-      console.log('pasbon')
-    }
-    else {
-      let indexNextTarget = 0
-      this.targets.forEach( (target, index) => {
-        if (target.touchedOrder === index + 1) {
-          this.fitness += 1500
-          indexNextTarget = index + 1 // Voir pour la derniere target bug possible out of array
-          console.log('oui')
-        }
-      })
-      this.fitness -= Math.sqrt(
-         (this.pos.x - rocketTargets.targets[indexNextTarget].x) * (this.pos.x - rocketTargets.targets[indexNextTarget].x) +
-         (this.pos.y - rocketTargets.targets[indexNextTarget].y) * (this.pos.y - rocketTargets.targets[indexNextTarget].x)
-       )
-    }
-  }
-  checkWrongTargetOrder() {
-    let wrong = false
-    this.targets.forEach( (target, index) => {
-      if (target.touchedOrder != 0 && target.touchedOrder != index + 1) {
-        wrong = true
-      }
+
+    let nbPositionIncrement = DNA.sizeGenes * program.geneClockRatio / rocketTargets.nbTargets
+    this.positions.forEach( (position, id) => {
+      let meanDstFromTarget = dst( position.x/nbPositionIncrement, position.y/nbPositionIncrement, rocketTargets.targets[id].x, rocketTargets.targets[id].y)
+      this.fitness -= meanDstFromTarget
     })
-    return wrong
+  }
+
+  initPositions() {
+    for (let i = 0; i < rocketTargets.nbTargets; i++) {
+      this.positions[i] = {x: 0, y: 0}
+    }
   }
 
   move() {
     this.pos.x += this.speed.x
     this.pos.y += this.speed.y
+    let idTarget =  Math.floor(program.clock / (DNA.sizeGenes * program.geneClockRatio / rocketTargets.nbTargets))  //Math.floor((program.clock / rocketTargets.nbTargets) / program.geneClockRatio)
+    this.positions[idTarget].x += this.pos.x
+    this.positions[idTarget].y += this.pos.y
   }
 
   accelerate() {
