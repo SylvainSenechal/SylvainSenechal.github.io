@@ -1,5 +1,8 @@
 'use strict';
 
+// TODO:  hover foncer avec blur des autres ? mettre les mousemove listener dans le init
+// TODO: voir la seed
+
 /////////////////////////
 // FBM SHADER ///////////
 /////////////////////////
@@ -8,6 +11,7 @@ var scene, camera, height, width, renderer, container
 var composer, pass
 var targetX = 0
 var targetY = 0
+const SEED = Math.random()
 
 const init = function(){
   createScene()
@@ -42,6 +46,7 @@ const createScene = () => {
 	pass = new THREE.ShaderPass( THREE.fbmShader );
 	pass.uniforms.u_resolution.value.x = renderer.domElement.width
 	pass.uniforms.u_resolution.value.y = renderer.domElement.height
+  pass.uniforms.seed.value = SEED
 	pass.renderToScreen = true
 	composer.addPass(pass)
 
