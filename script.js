@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 // TODO:  hover foncer avec blur des autres ? mettre les mousemove listener dans le init
 // TODO: voir la seed
@@ -13,13 +13,13 @@ var targetX = 0
 var targetY = 0
 const SEED = Math.random()
 
-const init = function(){
+const init = () => {
   createScene()
   resizeScene()
   loop()
 }
 
-const loop = function(){
+const loop = () => {
   render()
   interpolateMouse()
   requestAnimationFrame(loop)
@@ -42,8 +42,8 @@ const createScene = () => {
   container.appendChild(renderer.domElement)
 
 	composer = new THREE.EffectComposer(renderer)
-	composer.addPass(new THREE.RenderPass(scene, camera));
-	pass = new THREE.ShaderPass( THREE.fbmShader );
+	composer.addPass(new THREE.RenderPass(scene, camera))
+	pass = new THREE.ShaderPass(THREE.fbmShader)
 	pass.uniforms.u_resolution.value.x = renderer.domElement.width
 	pass.uniforms.u_resolution.value.y = renderer.domElement.height
   pass.uniforms.seed.value = SEED
@@ -56,8 +56,6 @@ const createScene = () => {
 document.onmousemove = mouse => {
   targetX = mouse.x
   targetY = height - mouse.y
-  let normalized = (15-2) * (mouse.x / width) + 2
-  pass.uniforms.u_octave.value = Math.floor(normalized)
 }
 const interpolateMouse = () => {
   pass.uniforms.u_mouse.value.x += (targetX-pass.uniforms.u_mouse.value.x) * 0.02
@@ -93,7 +91,7 @@ Array.from(projects).forEach( element => {
   element.addEventListener('mouseout', mouse => {
     document.getElementById("myCanvas").setAttribute("class", "notBlurred")
     Array.from(document.getElementsByClassName("projectLink")).forEach( elem => elem.setAttribute("class", "projectLink notBlurred"))
-  });
+  })
 })
 
 window.addEventListener('load', init)
