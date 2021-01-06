@@ -19,9 +19,10 @@ THREE.fbmShader = {
 
 	fragmentShader: [`
 
-		#ifdef GL_ES
-    precision highp float;
+	#ifdef GL_ES
+        precision highp float;
     #endif
+    #define OCTAVES 6
 
     uniform vec2 u_resolution;
     uniform vec2 u_mouse;
@@ -54,7 +55,6 @@ THREE.fbmShader = {
                 (d - b) * u.x * u.y;
     }
 
-    // #define OCTAVES 6
     float fbm (in vec2 st) {
         // Initial values
         float value = 0.0;
@@ -64,10 +64,10 @@ THREE.fbmShader = {
         // Loop of octaves
         const mat2 m = mat2( 0.80,  0.60, -0.60,  0.80 );
 
-        for (int i = 0; i < 100; i++) {
-            if(i == int(u_octave)){
-              break;
-            }
+        for (int i = 0; i < OCTAVES; i++) {
+            // if(i == int(u_octave)){
+            //   break;
+            // }
             value += amplitude * noise(st);
             st = m*st*2.;
             // Commenter st pour un autre effet
@@ -100,11 +100,11 @@ THREE.fbmShader = {
         //
         // n.x = fbm(st*3.0 + m*3.0 + vec2(0.1730,.210) + u_time*0.0478);
         // n.y = fbm(st*3.0 + m*3.0 + vec2(0.30,.210) - u_time*0.0098);
-        float f = fbm(st*3.0 + m*3.);
+        float f = fbm(st*3.0 + q*3.);
 
         color += fbm(st*3.0 + m*3.);
         //color = mix(color, vec3(0.783, 0.1, 0.5), 0.5);
-        color = mix(color, vec3(.8, 0.1, 0.), clamp(1.-dst, -1., 1.));
+        color = mix(color, vec3(.8, 0.1, 0.), clamp(1.-dst*2., -1., 1.));
 
         gl_FragColor = vec4((f*f*f+0.6*f*f+0.5*f)*color, 1.0);
 
