@@ -11,16 +11,21 @@ let radiusX = CIRCLE_TARGET
 let radiusY = CIRCLE_TARGET
 let offsetAngle1 = 0
 let offsetAngle2 = 0
+height = window.innerHeight
+width = window.innerWidth
+camera = new THREE.PerspectiveCamera()
+camera.position.z = 2
+camera.updateMatrixWorld()
 
 const projects = document.getElementsByClassName('projectLink')
 const boundingBoxes = [...projects].map(project => project.getBoundingClientRect())
 
 const init = () => {
-  createScene()
+  // createScene()
   createMouseCanvas()
-  resizeScene()
+  // resizeScene()
 
-  window.addEventListener('resize', resizeScene)
+  // window.addEventListener('resize', resizeScene)
   loop()
 }
 
@@ -30,15 +35,16 @@ document.onmousemove = mouse => {
 }
 
 const loop = () => {
-  render()
+  // render()
   renderMouse()
-  interpolateMouse()
+  // interpolateMouse()
   requestAnimationFrame(loop)
 }
 
 const renderMouse = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#ffffff'
+  ctx.fillStyle = '#000000'
+  // ctx.fillStyle = '#ffffff'
   ctx.beginPath()
   ctx.arc(target.x, canvas.height - target.y, 10, 0, 2 * Math.PI)
   ctx.fill()
@@ -169,7 +175,8 @@ const resizeScene = () => {
 
 [...projects].forEach( element => {
   element.addEventListener('mouseover', mouse => {
-    document.getElementById("myCanvas").setAttribute("class", "blurred")
+    console.log("oui")
+    // document.getElementById("myCanvas").setAttribute("class", "blurred")
     Array.from(document.getElementsByClassName("projectLink")).forEach( elem => {
       if(elem != element){
         elem.setAttribute("class", "projectLink blurred")
@@ -180,7 +187,7 @@ const resizeScene = () => {
     })
   })
   element.addEventListener('mouseout', mouse => {
-    document.getElementById("myCanvas").setAttribute("class", "notBlurred")
+    // document.getElementById("myCanvas").setAttribute("class", "notBlurred")
     Array.from(document.getElementsByClassName("projectLink")).forEach( elem => elem.setAttribute("class", "projectLink notBlurred"))
   })
 })

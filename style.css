@@ -12,6 +12,8 @@ body {
 }
 
 .container {
+  position: fixed;
+  background-color: ivory;
   display: grid;
   width: 100vw;
   height: 100vh;
@@ -79,7 +81,7 @@ body {
 
 .footer {
   grid-area: footer;
-  color: white;
+  /* color: white; */
 }
 
 .typeProjects {
@@ -98,18 +100,34 @@ body {
   text-align: center;
   text-decoration: none;
 }
+.projectLink:link:not(:last-child), .projectLink:visited:not(:last-child) {
+  border-bottom: 1px solid #dadde1;
+}
 
-.IA {
+
+.IA, cellularAutomaton {
   grid-area: IA;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
 }
 .cellularAutomaton {
   grid-area: cellularAutomaton;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
 }
 .algorithms {
   grid-area: algorithms;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
 }
 .others {
   grid-area: others;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
 }
 
 @@keyframes cacher {
@@ -121,18 +139,18 @@ body {
   }
 }
 
-#myCanvas{
+/* #myCanvas{
   position: fixed;
   width: 100%;
   height: 100%;
   z-index: -1;
-}
+} */
 
 #mouseCanvas {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 4;
+  /* width: 100%; */
+  /* height: 100%; */
+  /* z-index: 4; */
   pointer-events: none;
 }
 
